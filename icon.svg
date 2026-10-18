@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b2622" />
+      <stop offset="1" stop-color="#14110f" />
+    </linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d9c08a" />
+      <stop offset="1" stop-color="#8f7440" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)" />
+  <circle cx="256" cy="256" r="150" fill="none" stroke="url(#ring)" stroke-width="3" opacity="0.55" />
+  <circle cx="256" cy="106" r="22" fill="#4f9b6c" />
+  <circle cx="399" cy="201" r="22" fill="#c9483a" />
+  <circle cx="344" cy="369" r="22" fill="#c9a24a" />
+  <circle cx="168" cy="369" r="22" fill="#c9c3b4" />
+  <circle cx="113" cy="201" r="22" fill="#4d7fb5" />
+  <text x="256" y="292" text-anchor="middle" font-family="Songti SC, STSong, serif" font-size="150" fill="#f4efe6">命</text>
+</svg>
