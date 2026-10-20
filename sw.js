@@ -1,12 +1,12 @@
-const VERSION = '1f1e72a60ec9';
+const VERSION = 'ad3cca6b01f8';
 const CACHE = 'lifenum-' + VERSION;
 const PRECACHE = [
   "./",
-  "./assets/index-Daxj5OfO.css",
-  "./assets/index-ciRCooln.js",
-  "./assets/web-5-saCZVg.js",
-  "./assets/web-UJWpTySZ.js",
-  "./assets/web-D8REbDoS.js",
+  "./assets/index-B-tclVh-.css",
+  "./assets/index-BPrptubB.js",
+  "./assets/web-BzyOF94K.js",
+  "./assets/web-KipBVgnU.js",
+  "./assets/web-BAKJOn-f.js",
   "./index.html",
   "./manifest.webmanifest",
   "./icon.svg",
@@ -93,6 +93,8 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
+  if (url.pathname.startsWith('/api/')) return;
 
   if (request.mode === 'navigate') {
     event.respondWith(networkFirstNavigation(request));
