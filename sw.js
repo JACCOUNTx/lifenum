@@ -1,12 +1,12 @@
-const VERSION = '3032a8a63607';
+const VERSION = '87e51f251daf';
 const CACHE = 'lifenum-' + VERSION;
 const PRECACHE = [
   "./",
-  "./assets/index-b3vZqHEa.css",
-  "./assets/index-CKskq0WV.js",
-  "./assets/web-CCWhNPcB.js",
-  "./assets/web-Ca_-vHsm.js",
-  "./assets/web-Gm9RrqB0.js",
+  "./assets/index-2RZ27LaT.css",
+  "./assets/index-CV_lfN_T.js",
+  "./assets/web-DV59PTP4.js",
+  "./assets/web-BmV6Y-gJ.js",
+  "./assets/web-BoWmDCHP.js",
   "./index.html",
   "./manifest.webmanifest",
   "./icon.svg",
