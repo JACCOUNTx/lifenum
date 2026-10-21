@@ -1,0 +1,40 @@
+name: Daily D1 Backup
+
+on:
+  schedule:
+    # 03:30 HKT (19:30 UTC previous day)
+    - cron: '30 19 * * *'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        if: ${{ env.CF_TOKEN != '' }}
+        with:
+          node-version: 22
+
+      - name: Export D1
+        if: ${{ env.CF_TOKEN != '' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ env.CF_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ env.CF_ACCOUNT }}
+        run: npx --yes wrangler@4 d1 export lifenum --remote --output d1-backup.sql -y
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ env.CF_TOKEN != '' }}
+        with:
+          name: d1-backup-${{ github.run_id }}
+          path: d1-backup.sql
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Skipped (no Cloudflare token)
+        if: ${{ env.CF_TOKEN == '' }}
+        run: echo "CLOUDFLARE_API_TOKEN is not configured; skipping backup."

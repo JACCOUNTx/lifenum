@@ -1,0 +1,9 @@
+# Stripe (test keys are fine for local development)
+STRIPE_SECRET_KEY=sk_test_replace_me
+STRIPE_WEBHOOK_SECRET=whsec_replace_me
+# RevenueCat webhook Authorization bearer token
+REVENUECAT_WEBHOOK_TOKEN=replace_me
+# Public origin used for Checkout success/cancel URLs
+APP_URL=http://localhost:8788
+# This account is created as admin on registration
+ADMIN_EMAIL=jackyss@gmail.com

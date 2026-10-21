@@ -1,0 +1,9 @@
+name = "lifenum"
+compatibility_date = "2025-10-01"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lifenum"
+database_id = "7135fff5-018e-4930-afc0-f7b6763e0ff7"
+migrations_dir = "migrations"

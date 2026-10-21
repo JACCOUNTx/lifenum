@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">命數五行穿衣法</string>
+    <string name="title_activity_main">命數五行穿衣法</string>
+    <string name="package_name">com.lifenum.wuxing</string>
+    <string name="custom_url_scheme">com.lifenum.wuxing</string>
+</resources>
