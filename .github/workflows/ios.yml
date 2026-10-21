@@ -19,6 +19,15 @@ jobs:
       - run: npm run build
       - run: npx cap sync ios
 
+      - name: Select Xcode 26
+        run: |
+          ls -d /Applications/Xcode*.app
+          XC=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$XC" ]; then XC=$(ls -d /Applications/Xcode*.app | sort -V | tail -1); fi
+          echo "Using $XC"
+          sudo xcode-select -s "$XC/Contents/Developer"
+          xcodebuild -version
+
       - name: Import distribution certificate
         env:
           IOS_DIST_CERT_PEM: ${{ secrets.IOS_DIST_CERT_PEM }}
