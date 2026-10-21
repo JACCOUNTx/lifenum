@@ -18,14 +18,16 @@ jobs:
 
       - name: Import distribution certificate
         env:
-          IOS_DIST_CERT_P12_BASE64: ${{ secrets.IOS_DIST_CERT_P12_BASE64 }}
-          IOS_DIST_CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
+          IOS_DIST_CERT_PEM: ${{ secrets.IOS_DIST_CERT_PEM }}
+          IOS_DIST_KEY_PEM: ${{ secrets.IOS_DIST_KEY_PEM }}
         run: |
-          echo "$IOS_DIST_CERT_P12_BASE64" | base64 --decode > cert.p12
+          echo "$IOS_DIST_CERT_PEM" > cert.pem
+          echo "$IOS_DIST_KEY_PEM" > key.pem
           security create-keychain -p actions build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p actions build.keychain
-          security import cert.p12 -k build.keychain -P "$IOS_DIST_CERT_PASSWORD" -T /usr/bin/codesign
+          security import cert.pem -k build.keychain -T /usr/bin/codesign
+          security import key.pem -k build.keychain -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple: -s -k actions build.keychain
 
       - name: Install provisioning profile
