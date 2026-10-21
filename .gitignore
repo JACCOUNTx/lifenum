@@ -23,3 +23,6 @@ config.txt
 .keys/
 android/keystore.properties
 backups/
+
+ios/*.mobileprovision
+ios/*.cer
