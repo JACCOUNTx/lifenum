@@ -26,3 +26,5 @@ backups/
 
 ios/*.mobileprovision
 ios/*.cer
+
+store/review/
