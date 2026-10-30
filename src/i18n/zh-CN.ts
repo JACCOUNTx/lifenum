@@ -88,7 +88,7 @@ export const zhCN: Dict = {
     bestDay: '最旺日',
     watchDay: '留意日',
     luckyColors: '本周开运色',
-    days: '每日运势',
+    days: '每日穿搭',
     daysHint: '点按查看当日穿搭',
     guide: {
       support: '本周贵人运旺，适合主动求助、洽谈合作；把开运色穿在身上，更容易被看见。',

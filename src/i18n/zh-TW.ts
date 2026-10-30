@@ -80,7 +80,7 @@ export const zhTW: Dict = {
     disclaimer: '內容基於傳統五行文化整理，僅供穿搭靈感與娛樂參考。',
   },
   week: {
-    title: '本週運程',
+    title: '本週穿搭預覽',
     hint: '用七日干支五行對照本命，看看哪一天最順、哪一天宜守。',
     thisWeek: '回到本週',
     average: '本週平均',
@@ -149,7 +149,7 @@ export const zhTW: Dict = {
   },
   auth: {
     account: '會員帳戶',
-    subtitle: '登入後同步姓名與出生日期，並解鎖完整運程、週曆與穿搭建議。',
+    subtitle: '登入後同步姓名與出生日期，並解鎖完整穿搭建議、週曆與穿搭建議。',
     login: '登入',
     register: '註冊',
     email: '電子郵件',
@@ -178,9 +178,9 @@ export const zhTW: Dict = {
     revoke: '停用',
     stripeMissing: '尚未設定 Stripe 金鑰，暫時無法收款。',
     nativePurchase: 'App 內訂閱功能即將推出，敬請期待。',
-    lockedTitle: '解鎖完整運程',
+    lockedTitle: '解鎖完整穿搭建議',
     lockedDesc:
-      '免費版只顯示今日摘要、五行能量分布與今日三色。訂閱後可查看每日穿搭靈感、分享、每週運程、週曆、記錄與完整個人分析。',
+      '免費版只顯示今日摘要、五行能量分布與今日三色。訂閱後可查看每日穿搭建議、分享、每週配色預覽、週曆、記錄與個人分析。',
     loginToSubscribe: '登入後訂閱',
     perMonth: '月',
     checkoutSuccess: '會員已開通，謝謝支持！',
