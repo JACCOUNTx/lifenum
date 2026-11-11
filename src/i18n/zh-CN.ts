@@ -144,6 +144,7 @@ export const zhCN: Dict = {
     aboutText:
       '命数五行结合生命数字与每日干支五行，为你生成专属穿搭配色。未登录时数据只保存在本机；登录会员后，姓名与出生日期会同步到你的账户。',
     privacyPolicy: '隐私政策',
+    termsOfUse: '服务条款',
     deleteInfo: '删除账户说明',
     version: '版本',
   },
@@ -177,7 +178,13 @@ export const zhCN: Dict = {
     grant: '开通',
     revoke: '停用',
     stripeMissing: '尚未设置 Stripe 密钥，暂时无法收款。',
-    nativePurchase: 'App 内订阅功能即将推出，敬请期待。',
+    storeUnavailable: 'App Store 订阅暂时无法使用，请稍后再试。',
+    restore: '恢复购买',
+    restoreSuccess: '已恢复会员资格。',
+    restoreEmpty: '找不到可恢复的购买记录。',
+    purchasePending: '购买正在等待批准，完成后会自动开通。',
+    purchaseSuccess: '会员已开通，谢谢支持！',
+    purchaseFailed: '购买未能完成，请再试一次。',
     lockedTitle: '解锁完整运程',
     lockedDesc:
       '免费版只显示今日摘要、五行能量分布与今日三色。订阅后可查看每日穿搭灵感、分享、每周运程、周历、记录与完整个人分析。',

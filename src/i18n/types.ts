@@ -134,6 +134,7 @@ export interface Dict {
     about: string;
     aboutText: string;
     privacyPolicy: string;
+    termsOfUse: string;
     deleteInfo: string;
     version: string;
   };
@@ -167,7 +168,13 @@ export interface Dict {
     grant: string;
     revoke: string;
     stripeMissing: string;
-    nativePurchase: string;
+    storeUnavailable: string;
+    restore: string;
+    restoreSuccess: string;
+    restoreEmpty: string;
+    purchasePending: string;
+    purchaseSuccess: string;
+    purchaseFailed: string;
     lockedTitle: string;
     lockedDesc: string;
     loginToSubscribe: string;

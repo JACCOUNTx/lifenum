@@ -112,6 +112,14 @@ export const api = {
     }),
   checkout: () => request<{ url: string }>('/api/checkout', { method: 'POST' }),
   portal: () => request<{ url: string }>('/api/portal', { method: 'POST' }),
+  iapVerify: (transactions: string[]) =>
+    request<{ user: ApiUser; status: string; currentPeriodEnd: number | null }>(
+      '/api/iap/verify',
+      {
+        method: 'POST',
+        body: JSON.stringify({ transactions }),
+      },
+    ).then((data) => data.user),
   adminSettings: () => request<PublicConfig>('/api/admin/settings'),
   saveSettings: (input: { price: number; currency: string }) =>
     request<PublicConfig>('/api/admin/settings', {

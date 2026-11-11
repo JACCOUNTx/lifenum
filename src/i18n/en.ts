@@ -144,6 +144,7 @@ export const en: Dict = {
     aboutText:
       'LifeNum combines life path numbers with the daily sexagenary cycle to build a palette for your day. Data stays on this device unless you sign in, in which case your name and birth date sync to your account.',
     privacyPolicy: 'Privacy policy',
+    termsOfUse: 'Terms of use',
     deleteInfo: 'Delete account info',
     version: 'Version',
   },
@@ -178,7 +179,13 @@ export const en: Dict = {
     grant: 'Grant',
     revoke: 'Revoke',
     stripeMissing: 'Stripe keys are not configured yet — payments are unavailable.',
-    nativePurchase: 'In-app subscriptions are coming soon.',
+    storeUnavailable: 'App Store subscriptions are unavailable right now. Please try again later.',
+    restore: 'Restore purchases',
+    restoreSuccess: 'Your membership has been restored.',
+    restoreEmpty: 'No previous purchase was found.',
+    purchasePending: 'Your purchase is pending approval. Membership activates once it completes.',
+    purchaseSuccess: 'Membership activated — thank you!',
+    purchaseFailed: 'The purchase could not be completed. Please try again.',
     lockedTitle: 'Unlock the full outlook',
     lockedDesc:
       'The free plan shows today’s summary, element balance, and three colors. Subscribe for outfit ideas, sharing, weekly outlook, weekly calendar, journal, and full profile analysis.',

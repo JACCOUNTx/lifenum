@@ -206,6 +206,10 @@ export function ProfileView({ profile, onUpdate, onReset }: ProfileViewProps) {
             {t.profile.privacyPolicy}
           </a>
           <span>·</span>
+          <a href="https://lifenum.pages.dev/terms" target="_blank" rel="noopener">
+            {t.profile.termsOfUse}
+          </a>
+          <span>·</span>
           <a href="https://lifenum.pages.dev/delete-account" target="_blank" rel="noopener">
             {t.profile.deleteInfo}
           </a>

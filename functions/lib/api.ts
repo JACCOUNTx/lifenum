@@ -352,6 +352,35 @@ export async function upsertStoreSubscription(
     .run();
 }
 
+export async function upsertAppleSubscription(
+  env: Env,
+  userId: string,
+  status: string,
+  currentPeriodEnd: number,
+  originalTransactionId: string,
+  productId: string,
+): Promise<void> {
+  await env.DB.prepare(
+    `INSERT INTO subscriptions (user_id, status, stripe_customer_id, stripe_subscription_id, current_period_end, updated_at, apple_original_transaction_id, apple_product_id)
+     VALUES (?, ?, NULL, NULL, ?, ?, ?, ?)
+     ON CONFLICT(user_id) DO UPDATE SET
+       status = excluded.status,
+       current_period_end = excluded.current_period_end,
+       updated_at = excluded.updated_at,
+       apple_original_transaction_id = excluded.apple_original_transaction_id,
+       apple_product_id = excluded.apple_product_id`,
+  )
+    .bind(
+      userId,
+      status,
+      currentPeriodEnd,
+      new Date().toISOString(),
+      originalTransactionId,
+      productId,
+    )
+    .run();
+}
+
 export async function verifyStripeSignature(
   payload: string,
   header: string | null,

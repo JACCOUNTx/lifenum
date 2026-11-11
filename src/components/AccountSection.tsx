@@ -1,17 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n';
 import { api, ApiError, formatMoney } from '../lib/api';
 import { useAuth } from '../lib/auth';
+import { iapAvailable, iapGetProduct } from '../lib/iap';
 
 export function AccountSection({ onAdmin }: { onAdmin: () => void }) {
   const { t, tag, format } = useI18n();
-  const { user, config, openAuth, logout, subscribe, manage } = useAuth();
+  const { user, config, openAuth, logout, subscribe, manage, restore } = useAuth();
+  const [storePrice, setStorePrice] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
-  const price = config ? formatMoney(config.priceCents, config.currency, tag) : '—';
+  const fallbackPrice = config ? formatMoney(config.priceCents, config.currency, tag) : '—';
+  const price = storePrice ?? fallbackPrice;
   const priceLine = `${price}/${t.auth.perMonth}`;
+
+  useEffect(() => {
+    if (!iapAvailable) return;
+    let active = true;
+    void iapGetProduct().then((product) => {
+      if (active && product) setStorePrice(product.displayPrice);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const removeAccount = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -86,6 +100,11 @@ export function AccountSection({ onAdmin }: { onAdmin: () => void }) {
         {user.role === 'admin' ? (
           <button type="button" className="ghost-btn" onClick={onAdmin}>
             {t.auth.admin}
+          </button>
+        ) : null}
+        {iapAvailable ? (
+          <button type="button" className="link-btn" onClick={() => void restore()}>
+            {t.auth.restore}
           </button>
         ) : null}
         <button type="button" className="link-btn" onClick={() => void logout()}>
