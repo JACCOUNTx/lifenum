@@ -65,7 +65,15 @@
 
 至少提供 3 張：今日三色、週曆、每週運程（會員視角）。
 
-## 6. 審核備註
+## 6. App 內購買（已實作）
+
+- 商品：`com.lifenum.wuxing.monthly`（自動續訂，1 個月）。
+- iOS：`native/iap` 本機 Capacitor 插件（StoreKit 2），提供購買、恢復購買、目前權益及系統訂閱管理。
+- 伺服器：`POST /api/iap/verify` 以 Apple Root CA G2/G3 驗證 StoreKit 簽署的 JWS，通過後寫入 D1 `subscriptions`；不信任用戶端傳來的交易資料。
+- App 內不提供任何外部付款連結；條款與私隱連結位於「我的 → 關於」。
+- 2026-11-11 已提交 1.1.0（Build 7），連同訂閱商品及訂閱群組一併送審。
+
+## 7. 審核備註
 - 需要登入才能使用完整功能；請建立一組測試帳號並在 App Review Information 提供。
 - App 內提供「刪除帳戶」（我的 → 刪除帳戶）。
 - 不要在 app 內連結到網站付款；native 訂閱使用 IAP（見 `store/iap-revenuecat.md`）。

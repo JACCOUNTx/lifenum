@@ -4,8 +4,9 @@
 
 ## 架構
 - **網頁**：Stripe Checkout／Portal（已完成）。
-- **iOS / Android app**：RevenueCat + Apple/Google 商店內購（代碼待接入）。
-- 兩邊都寫入同一個 D1 `subscriptions` 表，會員權限一致。
+- **iOS app**：直接使用 StoreKit 2（`native/iap`）＋伺服器 JWS 驗證（已完成）。
+- **Android app**：商店內購仍待接入（Play Billing 權限已開）。
+- 所有管道都寫入同一個 D1 `subscriptions` 表，會員權限一致。
 
 ## 已完成的伺服器部分
 - `POST /api/revenuecat/webhook`
@@ -39,16 +40,22 @@
    npm run deploy:cf
    ```
 
-## App 端接入（下一步）
-1. `npm i @revenuecat/purchases-capacitor`
-2. 啟動時以平台 public key 設定 SDK；登入後 `Purchases.logIn(user.id)`，登出 `Purchases.logOut()`。
-3. Paywall：
-   - 讀取 `getOfferings()`，顯示 `default` offering 的月費價格
-   - 購買：`purchasePackage($rc_monthly)`
-   - 還原：`restorePurchases()`
-   - 顯示服務條款與隱私政策連結
-4. 移除目前 native 的「即將推出」提示，改為載入 paywall。
-5. 重新 `npx cap sync` 並建置 AAB / iOS。
+## App 端接入（已改用直接 StoreKit 2，RevenueCat 變成選用）
+
+iOS 已不再等待 RevenueCat public keys，改為直接使用 StoreKit 2：
+
+1. `native/iap` 本機 Capacitor 插件（`ios/Sources/LifenumIapPlugin`）提供
+   `getProducts`、`purchase`、`restore`、`currentEntitlements`、`manageSubscriptions`。
+2. 前端 `src/lib/iap.ts` 只會在 iOS 啟用；購買時帶 `appAccountToken = users.id`。
+3. 交易完成後，App 把 Apple 簽署的 JWS 傳到 `POST /api/iap/verify`。
+4. 伺服器用內建的 Apple Root CA G2/G3 驗證憑證鏈與簽章
+   （`functions/lib/jws.ts`），確認 bundleId、商品、到期日及
+   `appAccountToken` 後才寫入 D1 `subscriptions`。
+5. 每次登入或開啟 App 都會以 `currentEntitlements()` 重新同步，續訂後自動延長。
+
+若日後想改用 RevenueCat（例如需要跨平台分析或優惠券），只需把
+`src/lib/iap.ts` 換成 RevenueCat SDK，`/api/iap/verify` 與資料表欄位可保留。
+Android 目前仍未有原生內購程式碼（Play Billing 權限已開）。
 
 ## 測試
 - Google：Play Console → License testing 加入測試帳號，使用測試卡。
