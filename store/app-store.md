@@ -43,16 +43,18 @@
 本機是 Windows，無法用 Xcode 簽名。已提供 `.github/workflows/ios.yml`：
 1. 把專案推到 GitHub repo（private 亦可）。
 2. 在 GitHub → Settings → Secrets and variables → Actions 加入：
-   - `IOS_DIST_CERT_P12_BASE64`：Apple Distribution 憑證 `.p12` 的 base64
-   - `IOS_DIST_CERT_PASSWORD`：`.p12` 密碼
+   - `IOS_DIST_CERT_PEM`：Apple Distribution 憑證 `.pem`
+   - `IOS_DIST_KEY_PEM`：對應私鑰 `.pem`
    - `IOS_PROVISION_PROFILE_BASE64`：App Store provisioning profile 的 base64
    - `IOS_PROFILE_NAME`：profile 名稱
    - `IOS_TEAM_ID`：Apple Team ID
    - `APPSTORE_API_KEY_ID`：App Store Connect API Key ID
    - `APPSTORE_ISSUER_ID`：Issuer ID
    - `APPSTORE_API_PRIVATE_KEY`：`AuthKey_XXXX.p8` 內容
-3. 執行 workflow（workflow_dispatch），上傳到 TestFlight。
-4. 在 App Store Connect 選擇 TestFlight build 送審。
+3. 觸發 workflow：手動 workflow_dispatch，或修改 `.github/ios-trigger.txt` 後 push。
+4. `CFBundleVersion` 由 `github.run_number` 自動填入，不需手動遞增。
+5. `CFBundleShortVersionString` 來自 `ios/App/App.xcodeproj` 的 `MARKETING_VERSION`。
+6. 在 App Store Connect 選擇 TestFlight build 送審。
 
 ## 5. 截圖
 | 裝置 | 尺寸（像素） |
