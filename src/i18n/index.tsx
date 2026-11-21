@@ -6,11 +6,34 @@ import {
   useMemo,
   type ReactNode,
 } from 'react';
+import { useRemoteConfig } from '../lib/remote-config';
 import { useStoredState } from '../lib/storage';
 import { en } from './en';
 import { zhCN } from './zh-CN';
 import { zhTW } from './zh-TW';
 import type { Dict, Locale } from './types';
+
+/**
+ * Applies admin-managed text overrides on top of the bundled dictionary.
+ * Only keys that already exist in the bundled dictionary can be overridden.
+ */
+function mergeDict<T>(base: T, override: unknown): T {
+  if (override === undefined || override === null) return base;
+  if (Array.isArray(override)) {
+    return (Array.isArray(base) ? override : base) as T;
+  }
+  if (typeof override !== 'object') {
+    return (typeof base === typeof override ? override : base) as T;
+  }
+  if (typeof base !== 'object' || base === null || Array.isArray(base)) return base;
+  const baseRecord = base as Record<string, unknown>;
+  const result: Record<string, unknown> = { ...baseRecord };
+  for (const [key, value] of Object.entries(override as Record<string, unknown>)) {
+    if (!(key in baseRecord)) continue;
+    result[key] = mergeDict(baseRecord[key], value);
+  }
+  return result as T;
+}
 
 export const DICTS: Record<Locale, Dict> = {
   'zh-CN': zhCN,
@@ -42,7 +65,11 @@ const I18nContext = createContext<I18nValue | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useStoredState<Locale>('locale', detectLocale());
-  const t = DICTS[locale];
+  const remote = useRemoteConfig();
+  const t = useMemo(() => {
+    const override = remote.texts[locale];
+    return override ? mergeDict(DICTS[locale], override) : DICTS[locale];
+  }, [locale, remote.texts]);
 
   useEffect(() => {
     document.documentElement.lang = t.htmlLang;

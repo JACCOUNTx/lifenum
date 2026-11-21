@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n';
-import { api, type AdminUser, type PublicConfig } from '../lib/api';
+import { api, type AdminUser, type AppRemoteConfig, type PublicConfig } from '../lib/api';
 import { Sheet } from './ui';
 
 export function AdminSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -11,14 +11,22 @@ export function AdminSheet({ open, onClose }: { open: boolean; onClose: () => vo
   const [currency, setCurrency] = useState('HKD');
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [contentJson, setContentJson] = useState('');
+  const [contentSaved, setContentSaved] = useState(false);
+  const [contentError, setContentError] = useState<string | null>(null);
 
   const load = async () => {
     try {
-      const [nextSettings, nextUsers] = await Promise.all([api.adminSettings(), api.adminUsers()]);
+      const [nextSettings, nextUsers, nextContent] = await Promise.all([
+        api.adminSettings(),
+        api.adminUsers(),
+        api.adminContent(),
+      ]);
       setSettings(nextSettings);
       setPrice(String(nextSettings.priceCents / 100));
       setCurrency(nextSettings.currency);
       setUsers(nextUsers);
+      setContentJson(JSON.stringify(nextContent, null, 2));
       setError(null);
     } catch {
       setError(t.auth.errorGeneric);
@@ -39,6 +47,20 @@ export function AdminSheet({ open, onClose }: { open: boolean; onClose: () => vo
       setSaved(true);
     } catch {
       setError(t.auth.errorInvalidInput);
+    }
+  };
+
+  const saveContent = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setContentSaved(false);
+    setContentError(null);
+    try {
+      const parsed = JSON.parse(contentJson) as AppRemoteConfig;
+      const next = await api.saveContent(parsed);
+      setContentJson(JSON.stringify(next, null, 2));
+      setContentSaved(true);
+    } catch {
+      setContentError(t.auth.contentError);
     }
   };
 
@@ -88,6 +110,26 @@ export function AdminSheet({ open, onClose }: { open: boolean; onClose: () => vo
           <p className="muted small">{t.auth.stripeMissing}</p>
         ) : null}
         {error ? <p className="form-error">{error}</p> : null}
+      </form>
+
+      <h3 className="admin-heading">{t.auth.contentTitle}</h3>
+      <form className="admin-form" onSubmit={saveContent}>
+        <p className="muted small">{t.auth.contentHint}</p>
+        <textarea
+          className="admin-content"
+          value={contentJson}
+          onChange={(event) => {
+            setContentJson(event.target.value);
+            setContentSaved(false);
+          }}
+          rows={16}
+          spellCheck={false}
+        />
+        <button className="primary-btn compact" type="submit">
+          {t.auth.save}
+        </button>
+        {contentSaved ? <span className="muted small">{t.auth.saved}</span> : null}
+        {contentError ? <p className="form-error">{contentError}</p> : null}
       </form>
 
       <h3 className="admin-heading">{t.auth.users}</h3>

@@ -175,6 +175,9 @@ export interface Dict {
     purchasePending: string;
     purchaseSuccess: string;
     purchaseFailed: string;
+    contentTitle: string;
+    contentHint: string;
+    contentError: string;
     lockedTitle: string;
     lockedDesc: string;
     loginToSubscribe: string;

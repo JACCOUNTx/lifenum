@@ -8,9 +8,10 @@
 |---|---|---|
 | 網站頁面：`privacy.html`、`terms.html`、`support.html`、`delete-account.html` | 否 | `npm run deploy:cf` |
 | Cloudflare Functions / API、D1 資料、後端邏輯 | 否 | `npm run deploy:cf` / `npm run db:migrate` |
+| App 內介面文字、公告、連結、分頁開關（1.2.0 起） | 否 | 管理後台 → 內容與文案（`store/content-management.md`） |
 | App Store 截圖、宣傳文字、支援網址、供應地區 | 通常否 | App Store Connect 直接改 |
 | iOS 訂閱價格 | 否（現有訂閱按 Apple 規則） | App Store Connect → 訂閱 → 價格 |
-| App 內任何 UI、文案、推薦／五行演算法、功能、權限、原生插件 | **是** | 出新版本（本文件流程） |
+| App 版面、新功能、推薦／五行演算法、權限、原生插件 | **是** | 出新版本（本文件流程） |
 | App 內顯示的私隱政策／服務條款**文字**（嵌入式） | 是 | 改網頁後，下次版本再同步（App 目前以連結開啟網頁，所以只改網頁即可） |
 
 > Capacitor 會把 `dist/` 打包進 App，App 載入的是**本機檔案**，所以網站更新不會自動出現在 App。
@@ -77,7 +78,7 @@ npm run release:submit -- 1.2.0 --dry-run
 | 每日顏色／五行規則 | 改 `src/lib/*`，出新版本（App 內計算） |
 | 會員價格（網頁 Stripe） | 管理後台或 D1 settings，無需 build |
 | 會員價格（iOS） | App Store Connect → 訂閱 → 價格 |
-| 每日運勢文案 | 現時寫在 `src/i18n/*`，出新版本；如要經常改，可改成由 API 回傳（需先出一次 build 支援） |
+| 每日運勢文案／介面文字 | 1.2.0 起可在「管理後台 → 內容與文案」即時改（見 `store/content-management.md`） |
 | 私隱政策／服務條款 | 改 `public/*.html`，`npm run deploy:cf` |
 | 緊急後端修正 | `npm run deploy:cf`，即時生效 |
 | 緊急 App bug | 只能出新版本；建議先用後端開關關掉受影響功能（需 App 先支援） |

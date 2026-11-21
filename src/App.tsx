@@ -23,6 +23,7 @@ import type { Entry, Profile } from './lib/models';
 import { elementOfLifeNumber, lifeNumber } from './lib/numerology';
 import { applyUpdate, onUpdateAvailable } from './lib/pwa';
 import { buildOutfits, buildRecommendation, primaryForDate, type Recommendation } from './lib/recommend';
+import { useRemoteConfig } from './lib/remote-config';
 import type { ShareCardData } from './lib/shareCard';
 import { useStoredState } from './lib/storage';
 import { COLORS_BY_ELEMENT, ELEMENT_COLORS, ELEMENT_SOFT } from './lib/wuxing';
@@ -64,12 +65,33 @@ export default function App() {
   const [adminOpen, setAdminOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [updateReady, setUpdateReady] = useState(false);
+  const remote = useRemoteConfig();
+  const [dismissedNotice, setDismissedNotice] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem('lifenum.notice-dismissed');
+    } catch {
+      return null;
+    }
+  });
+  const noticeText = remote.notice.enabled ? remote.notice.text[locale] : undefined;
+  const showRemoteNotice = Boolean(noticeText) && dismissedNotice !== String(remote.version);
+
+  const dismissRemoteNotice = () => {
+    try {
+      localStorage.setItem('lifenum.notice-dismissed', String(remote.version));
+    } catch {
+      // Ignore storage failures.
+    }
+    setDismissedNotice(String(remote.version));
+  };
 
   const isMember = user?.role === 'admin' || Boolean(user?.membership.active);
-  const visibleTabs = useMemo<Tab[]>(
-    () => (isMember ? ['today', 'week', 'calendar', 'journal', 'profile'] : ['today', 'profile']),
-    [isMember],
-  );
+  const visibleTabs = useMemo<Tab[]>(() => {
+    const base: Tab[] = isMember
+      ? ['today', 'week', 'calendar', 'journal', 'profile']
+      : ['today', 'profile'];
+    return base.filter((item) => remote.features[item] !== false);
+  }, [isMember, remote.features]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -237,6 +259,25 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      {showRemoteNotice ? (
+        <div className="remote-notice" role="status">
+          {remote.notice.link ? (
+            <a href={remote.notice.link} target="_blank" rel="noopener">
+              {noticeText}
+            </a>
+          ) : (
+            <span>{noticeText}</span>
+          )}
+          <button
+            type="button"
+            className="remote-notice-close"
+            aria-label={t.common.close}
+            onClick={dismissRemoteNotice}
+          >
+            ×
+          </button>
+        </div>
+      ) : null}
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark">命</span>

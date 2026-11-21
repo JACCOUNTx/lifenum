@@ -185,6 +185,10 @@ export const zhCN: Dict = {
     purchasePending: '购买正在等待批准，完成后会自动开通。',
     purchaseSuccess: '会员已开通，谢谢支持！',
     purchaseFailed: '购买未能完成，请再试一次。',
+    contentTitle: '内容与文案（即时生效）',
+    contentHint:
+      '修改 notice（公告）、texts（界面文字）、features（功能开关）、links（链接）。保存后 App 下次打开即生效，无需重新上架。',
+    contentError: 'JSON 格式错误或保存失败。',
     lockedTitle: '解锁完整运程',
     lockedDesc:
       '免费版只显示今日摘要、五行能量分布与今日三色。订阅后可查看每日穿搭灵感、分享、每周运程、周历、记录与完整个人分析。',

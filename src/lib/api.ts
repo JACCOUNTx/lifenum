@@ -28,6 +28,15 @@ export interface PublicConfig {
   stripeConfigured: boolean;
 }
 
+export interface AppRemoteConfig {
+  version: number;
+  notice: { enabled: boolean; text: Record<string, string>; link: string | null };
+  features: Record<string, boolean>;
+  texts: Record<string, Record<string, unknown>>;
+  links: { privacy: string | null; terms: string | null; support: string | null };
+  updatedAt: string | null;
+}
+
 export interface AdminUser {
   id: string;
   email: string;
@@ -109,6 +118,13 @@ export const api = {
     request<{ ok: boolean }>('/api/me', {
       method: 'DELETE',
       body: JSON.stringify({ password }),
+    }),
+  appConfig: () => request<AppRemoteConfig>('/api/app-config'),
+  adminContent: () => request<AppRemoteConfig>('/api/admin/content'),
+  saveContent: (config: AppRemoteConfig) =>
+    request<AppRemoteConfig>('/api/admin/content', {
+      method: 'PUT',
+      body: JSON.stringify(config),
     }),
   checkout: () => request<{ url: string }>('/api/checkout', { method: 'POST' }),
   portal: () => request<{ url: string }>('/api/portal', { method: 'POST' }),

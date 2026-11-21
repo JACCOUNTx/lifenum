@@ -186,6 +186,10 @@ export const en: Dict = {
     purchasePending: 'Your purchase is pending approval. Membership activates once it completes.',
     purchaseSuccess: 'Membership activated — thank you!',
     purchaseFailed: 'The purchase could not be completed. Please try again.',
+    contentTitle: 'Content (live updates)',
+    contentHint:
+      'Edit notice, texts, features and links. Changes apply the next time the app opens, with no App Store review.',
+    contentError: 'Invalid JSON or the save failed.',
     lockedTitle: 'Unlock the full outlook',
     lockedDesc:
       'The free plan shows today’s summary, element balance, and three colors. Subscribe for outfit ideas, sharing, weekly outlook, weekly calendar, journal, and full profile analysis.',

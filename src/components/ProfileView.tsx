@@ -3,6 +3,7 @@ import { DICTS, LOCALES, useI18n } from '../i18n';
 import { formatLongDate, isValidISO, todayISO } from '../lib/date';
 import type { Profile } from '../lib/models';
 import { birthdayNumber, elementOfLifeNumber, lifeNumber, personalYearNumber } from '../lib/numerology';
+import { useRemoteConfig } from '../lib/remote-config';
 import {
   COLORS_BY_ELEMENT,
   ELEMENT_COLORS,
@@ -13,7 +14,7 @@ import {
 } from '../lib/wuxing';
 import { ColorPill } from './ui';
 
-const VERSION = '1.0.0';
+const VERSION = __APP_VERSION__;
 
 interface ProfileViewProps {
   profile: Profile;
@@ -46,6 +47,9 @@ function ColorGroup({
 
 export function ProfileView({ profile, onUpdate, onReset }: ProfileViewProps) {
   const { t, locale, setLocale, tag, format } = useI18n();
+  const remote = useRemoteConfig();
+  const privacyUrl = remote.links.privacy ?? 'https://lifenum.pages.dev/privacy';
+  const termsUrl = remote.links.terms ?? 'https://lifenum.pages.dev/terms';
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(profile.name);
   const [draftBirth, setDraftBirth] = useState(profile.birthDate);
@@ -202,11 +206,11 @@ export function ProfileView({ profile, onUpdate, onReset }: ProfileViewProps) {
         <h3>{t.profile.about}</h3>
         <p>{t.profile.aboutText}</p>
         <p className="muted small about-links">
-          <a href="https://lifenum.pages.dev/privacy" target="_blank" rel="noopener">
+          <a href={privacyUrl} target="_blank" rel="noopener">
             {t.profile.privacyPolicy}
           </a>
           <span>·</span>
-          <a href="https://lifenum.pages.dev/terms" target="_blank" rel="noopener">
+          <a href={termsUrl} target="_blank" rel="noopener">
             {t.profile.termsOfUse}
           </a>
           <span>·</span>

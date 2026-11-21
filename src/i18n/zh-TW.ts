@@ -185,6 +185,10 @@ export const zhTW: Dict = {
     purchasePending: '購買正在等待批准，完成後會自動開通。',
     purchaseSuccess: '會員已開通，謝謝支持！',
     purchaseFailed: '購買未能完成，請再試一次。',
+    contentTitle: '內容與文案（即時生效）',
+    contentHint:
+      '修改 notice（公告）、texts（介面文字）、features（功能開關）、links（連結）。儲存後 App 下次開啟即生效，毋須重新上架。',
+    contentError: 'JSON 格式錯誤或儲存失敗。',
     lockedTitle: '解鎖完整穿搭建議',
     lockedDesc:
       '免費版只顯示今日摘要、五行能量分布與今日三色。訂閱後可查看每日穿搭建議、分享、每週配色預覽、週曆、記錄與個人分析。',

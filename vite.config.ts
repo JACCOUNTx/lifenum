@@ -1,6 +1,11 @@
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import react from '@vitejs/plugin-react';
 import { defineConfig, type Plugin } from 'vite';
+
+const packageJson = JSON.parse(
+  readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
+) as { version: string };
 
 const PUBLIC_ASSETS = [
   './manifest.webmanifest',
@@ -130,6 +135,9 @@ function serviceWorkerPlugin(): Plugin {
 
 export default defineConfig({
   base: './',
+  define: {
+    __APP_VERSION__: JSON.stringify(packageJson.version),
+  },
   plugins: [react(), serviceWorkerPlugin()],
   build: {
     target: 'es2020',
