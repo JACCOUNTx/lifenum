@@ -14,7 +14,10 @@
     "deploy:cf": "npm run build && wrangler pages deploy dist --project-name lifenum --branch main",
     "db:migrate": "wrangler d1 migrations apply lifenum --remote",
     "db:migrate:local": "wrangler d1 migrations apply lifenum --local",
-    "typecheck:api": "tsc -p functions/tsconfig.json"
+    "typecheck:api": "tsc -p functions/tsconfig.json",
+    "release:status": "node scripts/asc-release.mjs status",
+    "release:bump": "node scripts/asc-release.mjs bump",
+    "release:submit": "node scripts/asc-release.mjs submit"
   },
   "dependencies": {
     "@lifenum/iap": "file:./native/iap",

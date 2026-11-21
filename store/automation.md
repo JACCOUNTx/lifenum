@@ -66,12 +66,13 @@ npx wrangler d1 execute lifenum-restore --remote --file D:\LifeNum\backups\<stam
 ## D. 自動上架 iOS（TestFlight）
 `.github/workflows/ios.yml` 在 macOS runner 建 Archive，並在 Apple API secrets 存在時上傳 TestFlight。
 需要 Secrets（詳見 `store/app-store.md`）：
-`IOS_DIST_CERT_P12_BASE64`、`IOS_DIST_CERT_PASSWORD`、`IOS_PROVISION_PROFILE_BASE64`、
+`IOS_DIST_CERT_PEM`、`IOS_DIST_KEY_PEM`、`IOS_PROVISION_PROFILE_BASE64`、
 `IOS_PROFILE_NAME`、`IOS_TEAM_ID`、`APPSTORE_API_KEY_ID`、`APPSTORE_ISSUER_ID`、
 `APPSTORE_API_PRIVATE_KEY`。
 
-上傳 TestFlight 後，正式送審（App Review）仍建議在 App Store Connect 手動按「Submit for Review」，
-因為需要選擇 build、填寫審核備註與示範帳號。
+上傳 TestFlight 後，用 `npm run release:submit -- <版本>` 建立版本、複製 metadata、
+上傳截圖、掛 build 並送審（詳見 `store/release-process.md`）。
+`CFBundleVersion` 由 `github.run_number` 自動遞增，不需要手動修改。
 
 ## E. 仍無法全自動的部分
 - 建立全新的 Google Play / App Store app record（只可在 Console 建立）。
