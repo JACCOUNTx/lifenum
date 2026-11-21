@@ -15,7 +15,7 @@ import { WeeklyView } from './components/WeeklyView';
 import { useI18n } from './i18n';
 import type { Dict } from './i18n/types';
 import { copyText } from './lib/clipboard';
-import { api } from './lib/api';
+import { api, type DailyEntry } from './lib/api';
 import { useAuth } from './lib/auth';
 import { formatLongDate, todayISO } from './lib/date';
 import { dayGanzhi } from './lib/ganzhi';
@@ -65,7 +65,23 @@ export default function App() {
   const [adminOpen, setAdminOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [updateReady, setUpdateReady] = useState(false);
+  const [masterEntry, setMasterEntry] = useState<DailyEntry | null>(null);
   const remote = useRemoteConfig();
+
+  useEffect(() => {
+    let active = true;
+    void api
+      .daily(selectedDate)
+      .then((entry) => {
+        if (active) setMasterEntry(entry);
+      })
+      .catch(() => {
+        if (active) setMasterEntry(null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [selectedDate, remote.version]);
   const [dismissedNotice, setDismissedNotice] = useState<string | null>(() => {
     try {
       return localStorage.getItem('lifenum.notice-dismissed');
@@ -299,6 +315,7 @@ export default function App() {
             recommendation={recommendation}
             primary={primary}
             locked={!isMember}
+            masterEntry={masterEntry}
             onBackToToday={() => setSelectedDate(todayISO())}
             onShare={() => setShareOpen(true)}
             onCopy={handleCopy}

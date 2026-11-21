@@ -100,6 +100,41 @@ h3 {
   cursor: pointer;
 }
 
+.master-card {
+  border-left: 3px solid var(--gold);
+}
+
+.master-headline {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.45;
+}
+
+.master-colors {
+  margin-bottom: 10px;
+}
+
+.master-color {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: var(--gold-deep);
+  background: rgba(176, 141, 85, 0.12);
+  border-radius: 999px;
+}
+
+.master-summary {
+  margin: 0 0 8px;
+  white-space: pre-wrap;
+}
+
+.ghost-btn.is-active {
+  color: var(--gold-deep);
+  border-color: var(--gold);
+}
+
 .admin-content {
   width: 100%;
   min-height: 220px;
@@ -1370,6 +1405,14 @@ h3 {
   color: var(--ink);
   font-family: var(--sans);
   appearance: none;
+}
+
+.field input[type="checkbox"] {
+  width: auto;
+  padding: 0;
+  margin: 10px 0 0;
+  inline-size: 20px;
+  block-size: 20px;
 }
 
 .field select {

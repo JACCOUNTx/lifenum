@@ -78,6 +78,7 @@ export const en: Dict = {
       'The final score weights the stem 35%, the branch 25%, and your life path 40%. Each day takes its three highest-scoring elements as main, support, and accent colors; the calendar main color avoids repeating yesterday.',
     ],
     disclaimer: 'Built on traditional five-element culture — for outfit inspiration and fun, not professional advice.',
+    masterTitle: 'Today’s guidance',
   },
   week: {
     title: 'Weekly outlook',
@@ -190,6 +191,18 @@ export const en: Dict = {
     contentHint:
       'Edit notice, texts, features and links. Changes apply the next time the app opens, with no App Store review.',
     contentError: 'Invalid JSON or the save failed.',
+    dailyTitle: 'Daily reading (practitioner input)',
+    dailyHint:
+      'Pick a date, fill in the reading and publish it. Clients see it the next time they open the app. Separate colours with commas.',
+    dailyDate: 'Date',
+    dailyPublished: 'Published',
+    dailyHeadline: 'Headline',
+    dailyColors: 'Lucky colours',
+    dailySummary: 'Reading',
+    dailyNote: 'Note',
+    dailySaved: 'Saved',
+    dailyEmpty: 'No content for this date',
+    dailyDelete: 'Delete this day',
     lockedTitle: 'Unlock the full outlook',
     lockedDesc:
       'The free plan shows today’s summary, element balance, and three colors. Subscribe for outfit ideas, sharing, weekly outlook, weekly calendar, journal, and full profile analysis.',

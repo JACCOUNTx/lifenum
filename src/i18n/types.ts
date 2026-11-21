@@ -75,6 +75,7 @@ export interface Dict {
     rules: string;
     rulesBody: string[];
     disclaimer: string;
+    masterTitle: string;
   };
   week: {
     title: string;
@@ -178,6 +179,17 @@ export interface Dict {
     contentTitle: string;
     contentHint: string;
     contentError: string;
+    dailyTitle: string;
+    dailyHint: string;
+    dailyDate: string;
+    dailyPublished: string;
+    dailyHeadline: string;
+    dailyColors: string;
+    dailySummary: string;
+    dailyNote: string;
+    dailySaved: string;
+    dailyEmpty: string;
+    dailyDelete: string;
     lockedTitle: string;
     lockedDesc: string;
     loginToSubscribe: string;

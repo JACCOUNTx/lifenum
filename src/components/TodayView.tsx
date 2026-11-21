@@ -13,6 +13,8 @@ import {
   ELEMENT_TEXT_COLORS,
   type Element,
 } from '../lib/wuxing';
+import type { DailyEntry } from '../lib/api';
+import { MasterCard } from './MasterCard';
 import { ColorPill, ElementBadge } from './ui';
 
 interface TodayViewProps {
@@ -23,6 +25,7 @@ interface TodayViewProps {
   recommendation: Recommendation;
   primary: Element;
   locked: boolean;
+  masterEntry: DailyEntry | null;
   onBackToToday: () => void;
   onShare: () => void;
   onCopy: () => void;
@@ -36,6 +39,7 @@ export function TodayView({
   recommendation,
   primary,
   locked,
+  masterEntry,
   onBackToToday,
   onShare,
   onCopy,
@@ -66,6 +70,10 @@ export function TodayView({
         <button type="button" className="back-today" onClick={onBackToToday}>
           ← {t.common.backToday}
         </button>
+      ) : null}
+
+      {masterEntry ? (
+        <MasterCard entry={masterEntry} locale={locale} title={t.today.masterTitle} />
       ) : null}
 
       <section

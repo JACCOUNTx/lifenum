@@ -78,6 +78,7 @@ export const zhCN: Dict = {
       '综合推荐按日干 35%、地支 25%、本命 40% 加权；每日取分数最高的三个五行作为主色、辅色、点缀，日历主色会避开前一天，令每日颜色不同。',
     ],
     disclaimer: '内容基于传统五行文化整理，仅供穿搭灵感与娱乐参考。',
+    masterTitle: '师傅今日指引',
   },
   week: {
     title: '本周运程',
@@ -189,6 +190,17 @@ export const zhCN: Dict = {
     contentHint:
       '修改 notice（公告）、texts（界面文字）、features（功能开关）、links（链接）。保存后 App 下次打开即生效，无需重新上架。',
     contentError: 'JSON 格式错误或保存失败。',
+    dailyTitle: '每日内容（师傅输入）',
+    dailyHint: '选择日期后填写当日内容并发布，客户下次打开 App 即会看到。颜色用逗号分隔。',
+    dailyDate: '日期',
+    dailyPublished: '已发布',
+    dailyHeadline: '今日重点',
+    dailyColors: '幸运颜色',
+    dailySummary: '当日解说',
+    dailyNote: '备注',
+    dailySaved: '已保存',
+    dailyEmpty: '此日期没有任何内容',
+    dailyDelete: '删除此日内容',
     lockedTitle: '解锁完整运程',
     lockedDesc:
       '免费版只显示今日摘要、五行能量分布与今日三色。订阅后可查看每日穿搭灵感、分享、每周运程、周历、记录与完整个人分析。',

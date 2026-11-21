@@ -28,6 +28,20 @@ export interface PublicConfig {
   stripeConfigured: boolean;
 }
 
+export interface DailyContent {
+  headline: string | null;
+  summary: string | null;
+  colors: string[];
+  note: string | null;
+}
+
+export interface DailyEntry {
+  date: string;
+  published: boolean;
+  content: Partial<Record<string, DailyContent>>;
+  updatedAt: string | null;
+}
+
 export interface AppRemoteConfig {
   version: number;
   notice: { enabled: boolean; text: Record<string, string>; link: string | null };
@@ -120,6 +134,29 @@ export const api = {
       body: JSON.stringify({ password }),
     }),
   appConfig: () => request<AppRemoteConfig>('/api/app-config'),
+  daily: (date: string) =>
+    request<{ entry: DailyEntry | null }>(`/api/daily?date=${encodeURIComponent(date)}`).then(
+      (data) => data.entry,
+    ),
+  adminDaily: (date: string) =>
+    request<{ entry: DailyEntry | null }>(
+      `/api/admin/daily?date=${encodeURIComponent(date)}`,
+    ).then((data) => data.entry),
+  adminDailyList: () =>
+    request<{ entries: DailyEntry[] }>('/api/admin/daily').then((data) => data.entries),
+  deleteDaily: (date: string) =>
+    request<{ ok: boolean }>(`/api/admin/daily?date=${encodeURIComponent(date)}`, {
+      method: 'DELETE',
+    }),
+  saveDaily: (entry: {
+    date: string;
+    published: boolean;
+    content: Partial<Record<string, DailyContent>>;
+  }) =>
+    request<{ entry: DailyEntry }>('/api/admin/daily', {
+      method: 'PUT',
+      body: JSON.stringify(entry),
+    }).then((data) => data.entry),
   adminContent: () => request<AppRemoteConfig>('/api/admin/content'),
   saveContent: (config: AppRemoteConfig) =>
     request<AppRemoteConfig>('/api/admin/content', {

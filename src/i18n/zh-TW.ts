@@ -78,6 +78,7 @@ export const zhTW: Dict = {
       '綜合推薦按日干 35%、地支 25%、本命 40% 加權；每日取分數最高的三個五行作為主色、輔色、點綴，日曆主色會避開前一天，令每日顏色不同。',
     ],
     disclaimer: '內容基於傳統五行文化整理，僅供穿搭靈感與娛樂參考。',
+    masterTitle: '師傅今日指引',
   },
   week: {
     title: '本週穿搭預覽',
@@ -189,6 +190,18 @@ export const zhTW: Dict = {
     contentHint:
       '修改 notice（公告）、texts（介面文字）、features（功能開關）、links（連結）。儲存後 App 下次開啟即生效，毋須重新上架。',
     contentError: 'JSON 格式錯誤或儲存失敗。',
+    dailyTitle: '每日內容（師傅輸入）',
+    dailyHint:
+      '選擇日期後填寫當日內容並發佈，客戶下次開啟 App 即會看到。顏色以逗號分隔，例如「米白, 墨綠, 赭紅」。',
+    dailyDate: '日期',
+    dailyPublished: '已發佈',
+    dailyHeadline: '今日重點',
+    dailyColors: '幸運顏色',
+    dailySummary: '當日解說',
+    dailyNote: '備註',
+    dailySaved: '已儲存',
+    dailyEmpty: '此日期未有任何內容',
+    dailyDelete: '刪除此日內容',
     lockedTitle: '解鎖完整穿搭建議',
     lockedDesc:
       '免費版只顯示今日摘要、五行能量分布與今日三色。訂閱後可查看每日穿搭建議、分享、每週配色預覽、週曆、記錄與個人分析。',
