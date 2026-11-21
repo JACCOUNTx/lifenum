@@ -5,6 +5,11 @@ export interface Env {
   STRIPE_SECRET_KEY?: string;
   STRIPE_WEBHOOK_SECRET?: string;
   REVENUECAT_WEBHOOK_TOKEN?: string;
+  APNS_KEY_ID?: string;
+  APNS_TEAM_ID?: string;
+  APNS_PRIVATE_KEY?: string;
+  APNS_TOPIC?: string;
+  APNS_ENVIRONMENT?: string;
   APP_URL?: string;
   ADMIN_EMAIL?: string;
 }

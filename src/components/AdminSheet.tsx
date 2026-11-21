@@ -48,7 +48,7 @@ function contentFrom(draft: DailyDraft): DailyContent {
 }
 
 export function AdminSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { t, tag } = useI18n();
+  const { t, tag, format } = useI18n();
   const [settings, setSettings] = useState<PublicConfig | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [price, setPrice] = useState('88');
@@ -64,6 +64,14 @@ export function AdminSheet({ open, onClose }: { open: boolean; onClose: () => vo
   const [dailyDraft, setDailyDraft] = useState<DailyDraft>({ ...EMPTY_DRAFT });
   const [dailyStatus, setDailyStatus] = useState<string | null>(null);
   const [dailyError, setDailyError] = useState<string | null>(null);
+  const [pushTitle, setPushTitle] = useState('');
+  const [pushBody, setPushBody] = useState('');
+  const [pushLocale, setPushLocale] = useState('');
+  const [pushStatus, setPushStatus] = useState<string | null>(null);
+  const [pushError, setPushError] = useState<string | null>(null);
+  const [pushTokens, setPushTokens] = useState<number | null>(null);
+  const [pushConfigured, setPushConfigured] = useState(true);
+  const [pushSending, setPushSending] = useState(false);
 
   const loadDaily = useCallback(
     async (date: string, locale: DailyLocale) => {
@@ -83,6 +91,42 @@ export function AdminSheet({ open, onClose }: { open: boolean; onClose: () => vo
     if (!open) return;
     void loadDaily(dailyDate, dailyLocale);
   }, [open, dailyDate, dailyLocale, loadDaily]);
+
+  useEffect(() => {
+    if (!open) return;
+    void api
+      .adminPushStatus()
+      .then((status) => {
+        setPushTokens(status.tokens);
+        setPushConfigured(status.configured);
+      })
+      .catch(() => setPushTokens(null));
+  }, [open]);
+
+  const sendPush = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setPushStatus(null);
+    setPushError(null);
+    if (!pushTitle.trim() || !pushBody.trim()) {
+      setPushError(t.auth.errorInvalidInput);
+      return;
+    }
+    setPushSending(true);
+    try {
+      const result = await api.adminPushSend({
+        title: pushTitle,
+        body: pushBody,
+        ...(pushLocale ? { locale: pushLocale } : {}),
+      });
+      setPushStatus(format(t.auth.pushSent, { sent: result.sent, failed: result.failed }));
+      setPushTitle('');
+      setPushBody('');
+    } catch {
+      setPushError(t.auth.errorGeneric);
+    } finally {
+      setPushSending(false);
+    }
+  };
 
   const saveDaily = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -301,6 +345,51 @@ export function AdminSheet({ open, onClose }: { open: boolean; onClose: () => vo
           {dailyStatus ? <span className="muted small">{dailyStatus}</span> : null}
         </div>
         {dailyError ? <p className="form-error">{dailyError}</p> : null}
+      </form>
+
+      <h3 className="admin-heading">{t.auth.pushTitle}</h3>
+      <form className="admin-form" onSubmit={sendPush}>
+        <p className="muted small">
+          {t.auth.pushHint}
+          {pushTokens !== null ? ` · ${pushTokens}` : ''}
+        </p>
+        <div className="admin-row">
+          <label className="field">
+            <span>{t.auth.pushTitleField}</span>
+            <input
+              value={pushTitle}
+              maxLength={120}
+              onChange={(event) => setPushTitle(event.target.value)}
+            />
+          </label>
+          <label className="field">
+            <span>{t.auth.pushLocale}</span>
+            <select value={pushLocale} onChange={(event) => setPushLocale(event.target.value)}>
+              <option value="">{t.auth.pushAll}</option>
+              <option value="zh-TW">繁中</option>
+              <option value="zh-CN">简中</option>
+              <option value="en">EN</option>
+            </select>
+          </label>
+        </div>
+        <label className="field">
+          <span>{t.auth.pushBodyField}</span>
+          <textarea
+            rows={4}
+            maxLength={500}
+            value={pushBody}
+            onChange={(event) => setPushBody(event.target.value)}
+          />
+        </label>
+        <div className="admin-row">
+          <button className="primary-btn compact" type="submit" disabled={pushSending || !pushConfigured}>
+            {t.auth.pushSend}
+          </button>
+          {pushStatus ? <span className="muted small">{pushStatus}</span> : null}
+        </div>
+        {!pushConfigured ? <p className="form-error">APNs not configured</p> : null}
+        {pushTokens === 0 ? <p className="muted small">{t.auth.pushNoTokens}</p> : null}
+        {pushError ? <p className="form-error">{pushError}</p> : null}
       </form>
 
       <h3 className="admin-heading">{t.auth.contentTitle}</h3>

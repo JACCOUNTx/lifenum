@@ -144,6 +144,26 @@ export const api = {
     ).then((data) => data.entry),
   adminDailyList: () =>
     request<{ entries: DailyEntry[] }>('/api/admin/daily').then((data) => data.entries),
+  registerPush: (input: { token: string; platform?: string; locale?: string }) =>
+    request<{ ok: boolean }>('/api/push/register', {
+      method: 'POST',
+      body: JSON.stringify(input),
+    }),
+  unregisterPush: (token: string) =>
+    request<{ ok: boolean }>(`/api/push/register`, {
+      method: 'DELETE',
+      body: JSON.stringify({ token }),
+    }),
+  adminPushStatus: () =>
+    request<{ tokens: number; configured: boolean }>('/api/admin/push'),
+  adminPushSend: (input: { title: string; body: string; locale?: string }) =>
+    request<{
+      sent: number;
+      failed: number;
+      removed: number;
+      targeted: number;
+      failures?: { status: number; reason: string }[];
+    }>('/api/admin/push', { method: 'POST', body: JSON.stringify(input) }),
   deleteDaily: (date: string) =>
     request<{ ok: boolean }>(`/api/admin/daily?date=${encodeURIComponent(date)}`, {
       method: 'DELETE',

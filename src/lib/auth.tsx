@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { useI18n } from '../i18n';
 import { api, ApiError, type ApiUser, type PublicConfig } from './api';
+import { syncPush } from './push';
 import {
   IAP_PRODUCT_ID,
   iapAvailable,
@@ -109,6 +110,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return false;
     }
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    void syncPush(document.documentElement.lang || 'zh-TW');
+    // Re-register only when the signed-in account changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   useEffect(() => {
     if (!iapAvailable || !user) return;

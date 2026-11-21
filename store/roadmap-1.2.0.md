@@ -28,21 +28,14 @@
 
 所以：**1.1.0 之後至少要再出一次版本（1.2.0）加推送**；之後所有每日內容改動、推送發送、文字／公告改動都唔需要再上架。
 
-### 已驗證：現有 API Key 不能用於推送
+### APNs Key：已完成
 
-用 `AuthKey_QND8GYRV9M.p8` 測試 APNs → `403 InvalidProviderToken`。
-即係呢條 key 只可用於 App Store Connect，**未開啟 APNs**。
+`AuthKey_HMXF37VS36.p8`（Key ID `HMXF37VS36`、Team `FKAL7FF922`）已測試可發送推送
+（回 `400 BadDeviceToken` = 認證成功），並已寫入 Cloudflare Secrets。
+詳見 `store/push-notifications.md`。
 
-要你做一次（我無法代做，需網頁登入）：
-1. https://developer.apple.com/account/resources/authkeys/list
-2. 「＋」→ 命名 `LifeNum APNs` → 勾選 **Apple Push Notifications service (APNs)** → Continue → Register
-3. 下載 `AuthKey_XXXXXXXXXX.p8`（只可下載一次）
-4. 記下 Key ID 與 Team ID（`FKAL7FF922`）
-5. 把 `.p8` 放到 `D:\LifeNum\.keys\ios\`（已 gitignore）
-
-之後我可以：
-- 用該 key 發測試推送
-- 把 Key ID / Team ID / 私鑰寫入 Cloudflare Secrets（`APNS_KEY_ID`、`APNS_TEAM_ID`、`APNS_PRIVATE_KEY`）
+**仍需你做一次**：App ID 開啟 Push 能力 + 重新產生描述檔 + 更新 GitHub secret
+（現有 profile 沒有 `aps-environment`，否則 1.2.0 存檔會失敗）。步驟見 `store/push-notifications.md`。
 
 ## 三、1.2.0 應該包含咩（一次過，之後長期唔使再上架）
 
@@ -59,16 +52,19 @@
 
 > 網站版本即時可用；App 要到 1.2.0 才會顯示。
 
-### B. 推送通知（需 1.2.0 加入原生部分）
+### B. 推送通知（程式碼已完成，待 1.2.0 上架）
 
-1. `npm i @capacitor/push-notifications`
-2. iOS：`AppDelegate` 轉發 `didRegisterForRemoteNotifications`（插件已處理大部分）
-3. 新增 `device_tokens` 表（user_id、token、platform、locale、updated_at）
-4. 新 API：
-   - `POST /api/push/register`（登入用戶登記 token）
-   - `POST /api/admin/push`（師傅發送：標題／內容／連結，可只發某語言）
-5. 發送：Cloudflare Worker 用 APNs HTTP/2 + ES256 JWT（用新 APNs key），並清理失效 token
-6. App 內：設定頁「接收每日提示」開關（預設開，可關；符合 Apple 要求）
+| 項目 | 狀態 |
+|---|---|
+| `@capacitor/push-notifications` 插件 + `cap sync` | ✅ |
+| `AppDelegate` 轉發 device token / 失敗 | ✅ |
+| `App.entitlements`（`aps-environment`）+ pbxproj | ✅（待 App ID／profile 配合） |
+| D1 `device_tokens` 表 | ✅ 已遷移（本機＋遠端） |
+| `POST/DELETE /api/push/register` | ✅ 已測試 |
+| `POST/GET /api/admin/push`（APNs HTTP/2 + ES256） | ✅ 已實測，會清理失效 token |
+| 管理後台「推送通知」表單 | ✅ |
+| 「我的 → 接收每日提示」開關 | ✅ |
+| 版本號 | 已升到 `1.2.0`（1.1.0 審核中的 binary 不受影響） |
 
 ### C. 版面可配置（為「完全唔同版面」準備）
 
@@ -85,8 +81,8 @@
 | 時間 | 動作 |
 |---|---|
 | 現在 | 等 1.1.0 過審；同時取消中國大陸供應 |
-| 1.1.0 上架後 | 立即開發 1.2.0：推送 + 師傅每日內容 App 顯示 + theme/區塊化 |
-| 1.2.0 送審前 | 用 TestFlight 測試推送與師傅輸入流程 |
+| 1.1.0 上架後 | 開啟 App ID Push 能力、重新產生 profile、更新 GitHub secret，然後觸發 iOS 建置 1.2.0 |
+| 1.2.0 送審前 | 用 TestFlight 測試推送（先設 `APNS_ENVIRONMENT=sandbox`）與師傅輸入流程 |
 | 1.2.0 上架後 | 之後只改後台：每日內容、推送、文案、公告、顏色、分頁開關 |
 
 ## 五、已經可以直接試嘅嘢（唔影響上架）

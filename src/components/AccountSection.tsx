@@ -3,11 +3,14 @@ import { useI18n } from '../i18n';
 import { api, ApiError, formatMoney } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { iapAvailable, iapGetProduct } from '../lib/iap';
+import { disablePush, enablePush, isPushEnabled, pushAvailable, syncPush } from '../lib/push';
 
 export function AccountSection({ onAdmin }: { onAdmin: () => void }) {
   const { t, tag, format } = useI18n();
   const { user, config, openAuth, logout, subscribe, manage, restore } = useAuth();
   const [storePrice, setStorePrice] = useState<string | null>(null);
+  const [pushOn, setPushOn] = useState(() => isPushEnabled());
+  const [pushBusy, setPushBusy] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [deleting, setDeleting] = useState(false);
@@ -26,6 +29,22 @@ export function AccountSection({ onAdmin }: { onAdmin: () => void }) {
       active = false;
     };
   }, []);
+
+  const togglePush = async () => {
+    setPushBusy(true);
+    try {
+      if (pushOn) {
+        await disablePush();
+        setPushOn(false);
+      } else {
+        const ok = await enablePush(tag);
+        setPushOn(ok);
+        if (ok) await syncPush(tag);
+      }
+    } finally {
+      setPushBusy(false);
+    }
+  };
 
   const removeAccount = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -106,6 +125,17 @@ export function AccountSection({ onAdmin }: { onAdmin: () => void }) {
           <button type="button" className="link-btn" onClick={() => void restore()}>
             {t.auth.restore}
           </button>
+        ) : null}
+        {pushAvailable ? (
+          <label className="push-toggle">
+            <input
+              type="checkbox"
+              checked={pushOn}
+              disabled={pushBusy}
+              onChange={() => void togglePush()}
+            />
+            <span>{t.auth.pushToggle}</span>
+          </label>
         ) : null}
         <button type="button" className="link-btn" onClick={() => void logout()}>
           {t.auth.logout}

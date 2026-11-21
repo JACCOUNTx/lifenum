@@ -30,3 +30,7 @@ ios/*.cer
 store/review/
 
 .shots/
+
+# Apple signing keys (never commit)
+ios/AuthKey_*.p8
+*.p8

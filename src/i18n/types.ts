@@ -190,6 +190,16 @@ export interface Dict {
     dailySaved: string;
     dailyEmpty: string;
     dailyDelete: string;
+    pushToggle: string;
+    pushTitle: string;
+    pushHint: string;
+    pushTitleField: string;
+    pushBodyField: string;
+    pushLocale: string;
+    pushSend: string;
+    pushSent: string;
+    pushNoTokens: string;
+    pushAll: string;
     lockedTitle: string;
     lockedDesc: string;
     loginToSubscribe: string;
