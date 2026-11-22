@@ -25,7 +25,7 @@ App（1.2.0 起）
 | `APNS_TEAM_ID` | `FKAL7FF922` |
 | `APNS_PRIVATE_KEY` | `AuthKey_HMXF37VS36.p8` 內容 |
 | `APNS_TOPIC` | `com.lifenum.wuxing` |
-| `APNS_ENVIRONMENT` | `production`（提交 App Store 前先用 `sandbox` 測試） |
+| `APNS_ENVIRONMENT` | `production`（TestFlight 測試時改 `sandbox`） |
 
 本機 `.dev.vars` 亦有同名變數（`APNS_ENVIRONMENT=sandbox`），供 `npm run dev:cf` 測試。
 
@@ -33,10 +33,23 @@ App（1.2.0 起）
 - 用新 key 直接打 APNs → `400 BadDeviceToken`（代表認證成功）。
 - 經正式 Worker 發送 → 同樣回 `400 BadDeviceToken`，並自動移除無效 token。
 
-## ⚠️ 你仍需要做：開啟 App ID 的 Push 能力並重新產生描述檔
+## 現況（2026-11-22）
 
-現有 `LifeNum App Store.mobileprovision` 的 entitlements **沒有** `aps-environment`，
-所以 1.2.0 用現有 profile 存檔會失敗（entitlements 與 profile 不符）。
+- 1.2.0（Build 14）已上 TestFlight，但**不含推送 entitlement**，因為 App ID／描述檔未更新。
+- 推送程式碼（後端、插件、UI、APNs key）已全部完成，只差描述檔一步。
+
+### 自動簽名在 CI 不可行
+
+已試過用 `-allowProvisioningUpdates` + App Store Connect API key 讓 Xcode 自行產生描述檔，
+Apple 回覆：
+
+> Communication with Apple failed: Your team has no devices from which to generate a
+> provisioning profile.
+
+原因是自動簽名會先建立「開發用」描述檔，而團隊沒有已登記裝置。
+所以必須在 portal 重新產生 **App Store 發佈用**描述檔。
+
+## ⚠️ 你仍需要做：開啟 App ID 的 Push 能力並重新產生描述檔
 
 1. https://developer.apple.com/account/resources/identifiers/list
 2. 選 `com.lifenum.wuxing` → 勾選 **Push Notifications** → Save
@@ -47,10 +60,14 @@ App（1.2.0 起）
    ```powershell
    [Convert]::ToBase64String([IO.File]::ReadAllBytes('D:\LifeNum\.keys\ios\LifeNum_AppStore.mobileprovision')) | Set-Clipboard
    ```
-   GitHub → Settings → Secrets and variables → Actions → 更新該 secret。
+7. 啟用 entitlement 並重建：
+   ```powershell
+   npm run push:enable
+   npm run release:bump 1.2.0
+   git add -A; git commit -m "Enable push notifications"; git push
+   ```
 
-> 若只想先出一個不含推送的版本，可把 `ios/App/App/App.entitlements` 的
-> `aps-environment` 移除並在 pbxproj 刪除 `CODE_SIGN_ENTITLEMENTS`，但之後仍要再上架一次。
+`npm run push:status` 可查看目前 entitlement 是否已接上。
 
 ## 如何發送
 
@@ -61,9 +78,9 @@ App（1.2.0 起）
 
 未開啟通知的裝置不會收到；伺服器會顯示目前 token 數。
 
-## 測試流程（1.2.0 上 TestFlight 後）
+## 測試流程（帶推送的 build 上 TestFlight 後）
 
-1. 把 `APNS_ENVIRONMENT` 改為 `sandbox` 並重新部署：
+1. 把環境改為 sandbox 並重新部署：
    ```powershell
    "sandbox" | npx wrangler pages secret put APNS_ENVIRONMENT --project-name lifenum
    npm run deploy:cf

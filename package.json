@@ -17,7 +17,10 @@
     "typecheck:api": "tsc -p functions/tsconfig.json",
     "release:status": "node scripts/asc-release.mjs status",
     "release:bump": "node scripts/asc-release.mjs bump",
-    "release:submit": "node scripts/asc-release.mjs submit"
+    "release:submit": "node scripts/asc-release.mjs submit",
+    "push:status": "node scripts/push-entitlements.mjs status",
+    "push:enable": "node scripts/push-entitlements.mjs enable",
+    "push:disable": "node scripts/push-entitlements.mjs disable"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",
