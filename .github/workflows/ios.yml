@@ -80,6 +80,9 @@ jobs:
             PROVISIONING_PROFILE_SPECIFIER="" \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             archive 2>&1 | tee /tmp/archive.log || {
+              SUMMARY=$(grep -iE "error:|doesn't include|no profiles|requires a|Provisioning" /tmp/archive.log \
+                | head -6 | tr '\n' ' ' | cut -c1-900 | tr '"' "'")
+              echo "::error title=xcodebuild archive failed::${SUMMARY}"
               {
                 echo "## xcodebuild archive failed"
                 echo '```'
