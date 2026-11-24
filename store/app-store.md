@@ -81,7 +81,19 @@ Apple 於 2026-11-23 以 **Guideline 4.3(b)（飽和類別／Spam）** 拒絕 1.
 | iPhone 6.5" | 1284 × 2778 或 2778 × 1284 |
 | iPad 13"（如支援） | 2064 × 2752 或 2752 × 2064 |
 
-至少提供 3 張：今日三色、週曆、每週運程（會員視角）。
+至少提供 3 張：今日三色、每週配色預覽、穿搭週曆（會員視角）。
+
+截圖由程式產生，確保同 App 內文案一致（唔會再出現舊字眼）：
+
+```powershell
+npm run build
+npm run preview -- --port 4173 --strictPort   # 另一個終端保持執行
+node scripts/store-screenshots.mjs
+```
+
+輸出會覆寫 `store/ios-screenshots/iphone-1..3.png`（1290×2796）與 `ipad-1.png`（2048×2732），
+再用 `node scripts/asc-release.mjs` 相關流程或 App Store Connect 上傳。
+注意：版本處於 **Waiting for Review** 時截圖會被鎖定，要先把 submission 撤回（Cancel Submission）才可更換。
 
 ## 6. App 內購買（已實作）
 
@@ -89,7 +101,7 @@ Apple 於 2026-11-23 以 **Guideline 4.3(b)（飽和類別／Spam）** 拒絕 1.
 - iOS：`native/iap` 本機 Capacitor 插件（StoreKit 2），提供購買、恢復購買、目前權益及系統訂閱管理。
 - 伺服器：`POST /api/iap/verify` 以 Apple Root CA G2/G3 驗證 StoreKit 簽署的 JWS，通過後寫入 D1 `subscriptions`；不信任用戶端傳來的交易資料。
 - App 內不提供任何外部付款連結；條款與私隱連結位於「我的 → 關於」。
-- 2026-11-11 已提交 1.1.0（Build 7），連同訂閱商品及訂閱群組一併送審。
+- 2026-11-24 以 Build 17 重新送出 1.1.0（連同訂閱商品及訂閱群組）：改名為「五行穿衣法」、全面改用配色字眼、商店截圖重新產生，並已在 Resolution Center 回覆 Apple 的 4.3(b) 說明。
 
 ## 7. 審核備註
 - 需要登入才能使用完整功能；請建立一組測試帳號並在 App Review Information 提供。
