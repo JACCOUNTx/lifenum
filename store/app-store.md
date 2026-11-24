@@ -22,7 +22,7 @@ Apple 於 2026-11-23 以 **Guideline 4.3(b)（飽和類別／Spam）** 拒絕 1.
 ## 1. 基本資料
 | 項目 | 值 |
 |---|---|
-| App 名稱 | 五行穿衣 |
+| App 名稱 | 五行穿衣法 |
 | 副標題 | 每日五行穿搭配色建議 |
 | Bundle ID | `com.lifenum.wuxing` |
 | SKU | `lifenum-wuxing-1` |

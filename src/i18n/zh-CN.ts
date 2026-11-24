@@ -3,7 +3,7 @@ import type { Dict } from './types';
 export const zhCN: Dict = {
   localeName: '简体中文',
   htmlLang: 'zh-CN',
-  appName: '五行穿衣',
+  appName: '五行穿衣法',
   appSub: '个人色彩盘 × 每日配色',
   nav: {
     today: '今日',
