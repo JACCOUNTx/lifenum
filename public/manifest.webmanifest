@@ -1,7 +1,7 @@
 {
-  "name": "命數五行 · 生命數字穿衣",
-  "short_name": "命數五行",
-  "description": "用生命數字與每日干支五行，生成你的專屬穿搭配色。",
+  "name": "五行穿衣 · 每日配色",
+  "short_name": "五行穿衣",
+  "description": "用個人色彩碼與每日干支，生成你的專屬穿搭配色。",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

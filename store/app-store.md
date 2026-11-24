@@ -1,11 +1,29 @@
-# App Store 上架設定（命數五行穿衣法）
+# App Store 上架設定（五行穿衣）
 
-更新：2026-10-21
+更新：2026-11-24
+
+## 0. 4.3(b) 定位規則（2026-11-24 起）
+
+Apple 於 2026-11-23 以 **Guideline 4.3(b)（飽和類別／Spam）** 拒絕 1.1.0，
+指 App「primarily features astrology, horoscopes, palm reading, fortune telling or zodiac reports」。
+
+因此對外一律用「**穿搭配色工具**」定位，唔再用以下字眼（App 內、商店頁、截圖一致）：
+
+| 停用 | 改用 |
+|---|---|
+| 命數／生命數字 | 色彩碼 |
+| 每日運勢 | 每日配色 |
+| 開運色／幸運色 | 本週配色／常用色 |
+| 貴人色／財色／官煞色 | 助力色／行動色／收斂色 |
+| 大師數 | 組合數 |
+| 師傅指引 | 今日穿搭建議 |
+| 流年 | 年度 |
 
 ## 1. 基本資料
 | 項目 | 值 |
 |---|---|
-| App 名稱 | 命數五行穿衣法 |
+| App 名稱 | 五行穿衣 |
+| 副標題 | 每日五行穿搭配色建議 |
 | Bundle ID | `com.lifenum.wuxing` |
 | SKU | `lifenum-wuxing-1` |
 | 主要語言 | 繁體中文 |
@@ -20,8 +38,8 @@
 1. Certificates, Identifiers & Profiles → Identifiers → 新增 App ID `com.lifenum.wuxing`。
 2. App Store Connect → My Apps → 新增 App（iOS、名稱、語言、Bundle ID、SKU）。
 3. App 資訊：
-   - 副標題（30 字元）：`每日五行幸運穿搭配色`
-   - 關鍵字：`五行,穿衣,幸運色,每日運勢,生命數字,命理,穿搭`
+   - 副標題（30 字元）：`每日五行穿搭配色建議`
+   - 關鍵字：`穿搭,配色,顏色,衣著,色彩,五行,每日穿搭,穿搭日曆`
    - 描述：可沿用 `store/google-play.md` 的完整描述
    - 隱私政策 URL、支援 URL
 4. App Privacy（隱私標籤）：

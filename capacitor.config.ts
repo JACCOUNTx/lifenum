@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.lifenum.wuxing',
-  appName: '命數五行穿衣法',
+  appName: '五行穿衣',
   webDir: 'dist',
   backgroundColor: '#f7f3ec',
   android: {
