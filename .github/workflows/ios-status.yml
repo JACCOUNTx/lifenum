@@ -86,8 +86,8 @@ jobs:
             echo "[執行紀錄]($RUN_URL)"
           } > comment.md
 
-          if ! gh issue list --limit 1 >/dev/null 2>&1; then
-            echo '::warning::無法存取 Issues，狀態只寫入 step summary。'
+          if ! GH_ERR=$(gh issue list --limit 1 2>&1); then
+            echo "::warning::無法存取 Issues（$GH_ERR），狀態只寫入 step summary。"
             exit 0
           fi
 
