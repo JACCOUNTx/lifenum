@@ -85,6 +85,9 @@ npx wrangler d1 execute lifenum-restore --remote --file D:\LifeNum\backups\<stam
 需要 Secrets：`APPSTORE_API_KEY_ID`、`APPSTORE_ISSUER_ID`、`APPSTORE_API_PRIVATE_KEY`
 （與 `ios.yml` 共用）。權限只用到 `issues: write` + `contents: read`。
 
+> Repo 的 **Issues** 必須保持開啟（2026-11-25 已開啟）。若日後關閉，workflow 仍會成功，
+> 但只寫入 step summary 並顯示 warning，唔會有通知。
+
 - 想即刻跑一次：GitHub → Actions → **iOS 上架狀態（每日）** → Run workflow。
 - 想改時間：改 `cron`（UTC，香港時間 = UTC+8）。
 - 本機手動檢查：`npm run release:status`。
