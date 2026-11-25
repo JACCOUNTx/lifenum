@@ -1,0 +1,100 @@
+name: iOS 上架狀態（每日）
+
+on:
+  schedule:
+    # 05:00 UTC = 13:00 HKT
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ios-status
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 準備 App Store Connect API Key
+        env:
+          APPSTORE_API_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
+          APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+        run: |
+          mkdir -p .keys/ios
+          printf '%s\n' "$APPSTORE_API_PRIVATE_KEY" > ".keys/ios/AuthKey_${APPSTORE_API_KEY_ID}.p8"
+
+      - name: 讀取上架狀態
+        env:
+          ASC_KEY_PATH: .keys/ios/AuthKey_${{ secrets.APPSTORE_API_KEY_ID }}.p8
+          ASC_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+        run: |
+          set -o pipefail
+          node scripts/asc-release.mjs status | tee status.txt
+          {
+            echo '## iOS 上架狀態'
+            echo ''
+            echo '```'
+            cat status.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 更新追蹤 issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITLE='iOS 上架狀態追蹤'
+          STATE=$(grep -m1 -E '^  [0-9]+\.[0-9]+\.[0-9]+ \|' status.txt | sed 's/^  //')
+          if [ -z "$STATE" ]; then STATE='（讀不到版本狀態）'; fi
+
+          NOTE=''
+          case "$STATE" in
+            *REJECTED*) NOTE='⚠️ 版本被拒：請到 App Store Connect → App Review → 該送審單的 Messages 查看 Guideline 原因。' ;;
+            *READY_FOR_SALE*|*READY_FOR_DISTRIBUTION*) NOTE='✅ 版本已上架／可發佈。' ;;
+            *WAITING_FOR_REVIEW*) NOTE='⏳ Apple 審核中，無需動作，繼續等。' ;;
+            *PREPARE_FOR_SUBMISSION*) NOTE='📝 版本未送審，需要建立送審單。' ;;
+          esac
+
+          {
+            echo "**$(date -u -d '+8 hours' '+%Y-%m-%d %H:%M') HKT**"
+            echo ''
+            echo "版本：\`${STATE}\`"
+            echo ''
+            if [ -n "$NOTE" ]; then
+              echo "$NOTE"
+              echo ''
+            fi
+            echo '<details><summary>完整狀態</summary>'
+            echo ''
+            echo '```'
+            cat status.txt
+            echo '```'
+            echo ''
+            echo '</details>'
+            echo ''
+            echo "[執行紀錄]($RUN_URL)"
+          } > comment.md
+
+          if ! gh issue list --limit 1 >/dev/null 2>&1; then
+            echo '::warning::無法存取 Issues，狀態只寫入 step summary。'
+            exit 0
+          fi
+
+          NUM=$(gh issue list --state open --limit 100 --json number,title \
+            --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1)
+          if [ -z "$NUM" ]; then
+            gh issue create --title "$TITLE" --body-file comment.md
+          else
+            gh issue comment "$NUM" --body-file comment.md
+          fi

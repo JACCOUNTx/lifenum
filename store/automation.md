@@ -1,6 +1,6 @@
 # 自動備份與自動上架
 
-更新：2026-10-21
+更新：2026-11-25
 
 ## A. 自動備份（已在本機啟用）
 
@@ -74,7 +74,22 @@ npx wrangler d1 execute lifenum-restore --remote --file D:\LifeNum\backups\<stam
 上傳截圖、掛 build 並送審（詳見 `store/release-process.md`）。
 `CFBundleVersion` 由 `github.run_number` 自動遞增，不需要手動修改。
 
-## E. 仍無法全自動的部分
+## E. 每日檢查 iOS 上架狀態
+`.github/workflows/ios-status.yml` 每日 **香港時間 13:00**（`0 5 * * *` UTC）執行
+`node scripts/asc-release.mjs status`，並：
+
+1. 把完整狀態寫入該次 run 的 Summary；
+2. 在開放中的 **`iOS 上架狀態追蹤`** issue 加一則留言（第一次會自動建立），
+   內容包含版本狀態與提示（審核中／被拒／已上架）。GitHub 會 email 通知你。
+
+需要 Secrets：`APPSTORE_API_KEY_ID`、`APPSTORE_ISSUER_ID`、`APPSTORE_API_PRIVATE_KEY`
+（與 `ios.yml` 共用）。權限只用到 `issues: write` + `contents: read`。
+
+- 想即刻跑一次：GitHub → Actions → **iOS 上架狀態（每日）** → Run workflow。
+- 想改時間：改 `cron`（UTC，香港時間 = UTC+8）。
+- 本機手動檢查：`npm run release:status`。
+
+## F. 仍無法全自動的部分
 - 建立全新的 Google Play / App Store app record（只可在 Console 建立）。
 - 簽署商店協議、稅務與銀行資料。
 - App 審核、年齡分級、私隱標籤問卷。
