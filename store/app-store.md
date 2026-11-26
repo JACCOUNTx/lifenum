@@ -108,3 +108,6 @@ node scripts/store-screenshots.mjs
 - App 內提供「刪除帳戶」（我的 → 刪除帳戶）。
 - 不要在 app 內連結到網站付款；native 訂閱使用 IAP（見 `store/iap-revenuecat.md`）。
 - 已設定 `ITSAppUsesNonExemptEncryption = false`（只用標準 HTTPS）。
+- AdMob **只喺 Android 啟用**：iOS binary 雖然會 sync 到 `@capacitor-community/admob`，
+  但 JS 端有平台判斷（`src/lib/ads.ts`），iOS 與網頁都唔會初始化，
+  因此 iOS 未加 `GADApplicationIdentifier`、亦無 ATT 提示。日後要喺 iOS 出廣告需另行設定。

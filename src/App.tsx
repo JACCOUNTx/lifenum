@@ -1,6 +1,6 @@
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AccountSection } from './components/AccountSection';
 import { AdminSheet } from './components/AdminSheet';
 import { AuthSheet } from './components/AuthSheet';
@@ -16,6 +16,7 @@ import { useI18n } from './i18n';
 import type { Dict } from './i18n/types';
 import { copyText } from './lib/clipboard';
 import { api, type DailyEntry } from './lib/api';
+import { maybeShowInterstitial, showBanner } from './lib/ads';
 import { useAuth } from './lib/auth';
 import { formatLongDate, todayISO } from './lib/date';
 import { dayGanzhi } from './lib/ganzhi';
@@ -220,6 +221,22 @@ export default function App() {
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [tab, selectedDate, profile]);
+
+  const bannerStarted = useRef(false);
+  useEffect(() => {
+    if (bannerStarted.current) return;
+    bannerStarted.current = true;
+    void showBanner();
+  }, []);
+
+  const tabChanged = useRef(false);
+  useEffect(() => {
+    if (!tabChanged.current) {
+      tabChanged.current = true;
+      return;
+    }
+    void maybeShowInterstitial();
+  }, [tab]);
 
   useEffect(() => {
     if (Capacitor.getPlatform() !== 'android') return;

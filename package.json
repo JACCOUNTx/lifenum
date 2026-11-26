@@ -23,6 +23,7 @@
     "push:disable": "node scripts/push-entitlements.mjs disable"
   },
   "dependencies": {
+    "@capacitor-community/admob": "^8.4.2",
     "@capacitor/android": "^8.5.3",
     "@capacitor/app": "^8.1.2",
     "@capacitor/cli": "^8.5.3",

@@ -65,8 +65,8 @@ App 內圖示與啟動圖已在 `public/icons`、`android/app/src/main/res`。
 - 用途：帳戶管理、app 功能、付款。
 - 傳輸加密：是。
 - 可要求刪除：是（app 內「我的 → 刪除帳戶」）。
-- 分享給第三方：Cloudflare（托管）、Stripe（網頁付款）、RevenueCat（商店內購）。
-- 出售資料：否。廣告：否。
+- 分享給第三方：Cloudflare（托管）、Stripe（網頁付款）、RevenueCat（商店內購）、Google AdMob（廣告）。
+- 出售資料：否。廣告：是（AdMob 橫幅與插頁，見第 9 節；上架前必須在 Play Console 更新此表並申報 Advertising ID）。
 
 ## 7. 訂閱商品（Google Play）
 - Product ID：`lifenum_monthly`
@@ -80,3 +80,24 @@ App 內圖示與啟動圖已在 `public/icons`、`android/app/src/main/res`。
 - 刪除帳戶必須在 app 內可完成（已實作）。
 - 若審核員需要測試帳號，請在 App access 提供一組測試會員（另行建立）。
 - 不要在 app 內顯示「到網站付款」等外部購買連結（避免違反計費政策）。
+
+## 9. 廣告（Google AdMob）
+- 插件：`@capacitor-community/admob` 8.4.2（只喺 Android 啟用；網頁與 iOS 唔會初始化，見 `src/lib/ads.ts`）。
+- App ID：`android/app/src/main/AndroidManifest.xml` 內 `com.google.android.gms.ads.APPLICATION_ID`
+  - 現時：Google 官方測試 ID `ca-app-pub-3940256099942544~3347511713`
+  - 上架前：換成 AdMob 後台（`pub-1948382835033139`）嘅正式 App ID
+- 廣告單元（`src/lib/ads.ts` 常數）
+  - Banner（底部自適應）：`ca-app-pub-3940256099942544/6300978111`（測試）
+  - Interstitial：`ca-app-pub-3940256099942544/1033173712`（測試），切換分頁時觸發，3 分鐘冷卻
+- 版面：成功載入 Banner 後才設定 CSS 變數 `--ad-banner-height: 60px`，
+  底部導航、toast、`pwa-update` 與彈層底部按鈕會自動讓位，唔會被遮住。
+- app-ads.txt：`public/app-ads.txt`，部署後可於 `https://lifenum.pages.dev/app-ads.txt` 讀取
+  ```
+  google.com, pub-1948382835033139, DIRECT, f08c47fec0942fa0
+  ```
+  同時要在 AdMob 後台「應用程式 → app-ads.txt」填 `lifenum.pages.dev`（開發者網站網域），
+  並確認該 App 已連結 Play 商店網址，AdMob 才會驗證得到。
+- 上架前檢查：
+  1. 換正式 App ID 與廣告單元，並移除 `isTesting: true`。
+  2. Play Console → Data safety 更新為「有廣告」並申報 Advertising ID。
+  3. AdMob 帳戶完成付款資料、app 審核，並確認無無效流量警告。

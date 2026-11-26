@@ -13,6 +13,8 @@
     "Segoe UI", sans-serif;
   --safe-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
   --safe-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  /* 原生 AdMob Banner 佔用的高度；只有載入到廣告時 ads.ts 會改為 60px。 */
+  --ad-banner-height: 0px;
 }
 
 * {
@@ -266,7 +268,7 @@ h3 {
 /* ---------- layout ---------- */
 
 .content {
-  padding: 6px 18px calc(112px + var(--safe-bottom));
+  padding: 6px 18px calc(112px + var(--safe-bottom) + var(--ad-banner-height));
 }
 
 .view {
@@ -1306,7 +1308,7 @@ h3 {
   flex-direction: column;
   box-shadow: 0 -18px 50px rgba(20, 15, 10, 0.26);
   animation: sheet-up 0.28s cubic-bezier(0.22, 0.9, 0.32, 1);
-  padding-bottom: var(--safe-bottom);
+  padding-bottom: calc(var(--safe-bottom) + var(--ad-banner-height));
 }
 
 .sheet.is-wide {
@@ -1371,7 +1373,7 @@ h3 {
 .sheet-foot {
   display: flex;
   gap: 10px;
-  padding: 12px 20px calc(16px + var(--safe-bottom));
+  padding: 12px 20px calc(16px + var(--safe-bottom) + var(--ad-banner-height));
   border-top: 1px solid var(--line);
   background: var(--paper-2);
 }
@@ -2098,7 +2100,7 @@ h3 {
 
 .tabbar {
   position: fixed;
-  bottom: 0;
+  bottom: var(--ad-banner-height);
   left: 50%;
   transform: translateX(-50%);
   width: min(100%, 540px);
@@ -2138,7 +2140,7 @@ h3 {
 .toast {
   position: fixed;
   left: 50%;
-  bottom: calc(90px + var(--safe-bottom));
+  bottom: calc(90px + var(--safe-bottom) + var(--ad-banner-height));
   transform: translateX(-50%);
   z-index: 80;
   background: rgba(28, 23, 19, 0.92);
@@ -2164,7 +2166,7 @@ h3 {
 .pwa-update {
   position: fixed;
   left: 50%;
-  bottom: calc(90px + var(--safe-bottom));
+  bottom: calc(90px + var(--safe-bottom) + var(--ad-banner-height));
   transform: translateX(-50%);
   z-index: 85;
   display: flex;
