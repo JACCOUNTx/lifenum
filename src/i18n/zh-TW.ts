@@ -224,6 +224,12 @@ export const zhTW: Dict = {
     errorEmailExists: '此電子郵件已註冊。',
     errorInvalidInput: '請檢查輸入資料（密碼至少 8 位、出生日期必填）。',
     noUsers: '尚無會員',
+    changePassword: '修改密碼',
+    currentPassword: '目前密碼',
+    newPassword: '新密碼（至少 8 位）',
+    passwordSave: '更新密碼',
+    passwordUpdated: '密碼已更新',
+    errorSamePassword: '新密碼不能與目前密碼相同。',
     deleteAccount: '刪除帳戶',
     deleteAccountDesc:
       '刪除後會取消訂閱，並永久移除帳戶、姓名與出生日期，無法復原。請輸入密碼確認。',

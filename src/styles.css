@@ -1903,6 +1903,30 @@ h3 {
   gap: 10px;
 }
 
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+}
+
+.password-form input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 15px;
+  background: #fff;
+}
+
+.password-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .auth-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;

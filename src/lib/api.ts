@@ -128,6 +128,14 @@ export const api = {
       method: 'PUT',
       body: JSON.stringify(input),
     }).then((data) => data.user),
+  changePassword: (input: { currentPassword: string; newPassword: string }) =>
+    request<{ ok: boolean; user: ApiUser; token?: string }>('/api/auth/password', {
+      method: 'PUT',
+      body: JSON.stringify(input),
+    }).then((data) => {
+      if (data.token) localStorage.setItem(TOKEN_KEY, data.token);
+      return data.user;
+    }),
   deleteAccount: (password: string) =>
     request<{ ok: boolean }>('/api/me', {
       method: 'DELETE',

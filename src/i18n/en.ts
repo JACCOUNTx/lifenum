@@ -225,6 +225,12 @@ export const en: Dict = {
     errorEmailExists: 'This email is already registered.',
     errorInvalidInput: 'Check your details (8+ character password, birth date required).',
     noUsers: 'No members yet',
+    changePassword: 'Change password',
+    currentPassword: 'Current password',
+    newPassword: 'New password (8+ characters)',
+    passwordSave: 'Update password',
+    passwordUpdated: 'Password updated',
+    errorSamePassword: 'The new password must differ from the current one.',
     deleteAccount: 'Delete account',
     deleteAccountDesc:
       'This cancels your subscription and permanently removes your account, name and birth date. It cannot be undone. Enter your password to confirm.',

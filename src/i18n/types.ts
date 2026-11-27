@@ -211,6 +211,12 @@ export interface Dict {
     errorEmailExists: string;
     errorInvalidInput: string;
     noUsers: string;
+    changePassword: string;
+    currentPassword: string;
+    newPassword: string;
+    passwordSave: string;
+    passwordUpdated: string;
+    errorSamePassword: string;
     deleteAccount: string;
     deleteAccountDesc: string;
     deleteConfirm: string;

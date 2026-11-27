@@ -7,7 +7,7 @@ import { disablePush, enablePush, isPushEnabled, pushAvailable, syncPush } from 
 
 export function AccountSection({ onAdmin }: { onAdmin: () => void }) {
   const { t, tag, format } = useI18n();
-  const { user, config, openAuth, logout, subscribe, manage, restore } = useAuth();
+  const { user, config, openAuth, logout, subscribe, manage, restore, refresh } = useAuth();
   const [storePrice, setStorePrice] = useState<string | null>(null);
   const [pushOn, setPushOn] = useState(() => isPushEnabled());
   const [pushBusy, setPushBusy] = useState(false);
@@ -15,6 +15,12 @@ export function AccountSection({ onAdmin }: { onAdmin: () => void }) {
   const [password, setPassword] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [passwordOpen, setPasswordOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [savingPassword, setSavingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordDone, setPasswordDone] = useState(false);
   const fallbackPrice = config ? formatMoney(config.priceCents, config.currency, tag) : '—';
   const price = storePrice ?? fallbackPrice;
   const priceLine = `${price}/${t.auth.perMonth}`;
@@ -64,6 +70,34 @@ export function AccountSection({ onAdmin }: { onAdmin: () => void }) {
       );
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const changePassword = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSavingPassword(true);
+    setPasswordError(null);
+    setPasswordDone(false);
+    try {
+      await api.changePassword({ currentPassword, newPassword });
+      await refresh();
+      setPasswordOpen(false);
+      setCurrentPassword('');
+      setNewPassword('');
+      setPasswordDone(true);
+    } catch (error) {
+      const code = error instanceof ApiError ? error.code : '';
+      setPasswordError(
+        code === 'INVALID_CREDENTIALS'
+          ? t.auth.errorInvalidCredentials
+          : code === 'SAME_PASSWORD'
+            ? t.auth.errorSamePassword
+            : code === 'INVALID_INPUT'
+              ? t.auth.errorInvalidInput
+              : t.auth.errorGeneric,
+      );
+    } finally {
+      setSavingPassword(false);
     }
   };
 
@@ -137,10 +171,63 @@ export function AccountSection({ onAdmin }: { onAdmin: () => void }) {
             <span>{t.auth.pushToggle}</span>
           </label>
         ) : null}
+        <button
+          type="button"
+          className="link-btn"
+          onClick={() => {
+            setPasswordOpen(true);
+            setPasswordDone(false);
+            setPasswordError(null);
+          }}
+        >
+          {t.auth.changePassword}
+        </button>
         <button type="button" className="link-btn" onClick={() => void logout()}>
           {t.auth.logout}
         </button>
       </div>
+
+      {passwordOpen ? (
+        <form className="password-form" onSubmit={changePassword}>
+          <input
+            type="password"
+            required
+            autoComplete="current-password"
+            value={currentPassword}
+            placeholder={t.auth.currentPassword}
+            onChange={(event) => setCurrentPassword(event.target.value)}
+          />
+          <input
+            type="password"
+            required
+            minLength={8}
+            autoComplete="new-password"
+            value={newPassword}
+            placeholder={t.auth.newPassword}
+            onChange={(event) => setNewPassword(event.target.value)}
+          />
+          <div className="password-actions">
+            <button className="primary-btn compact" type="submit" disabled={savingPassword}>
+              {t.auth.passwordSave}
+            </button>
+            <button
+              className="link-btn"
+              type="button"
+              onClick={() => {
+                setPasswordOpen(false);
+                setCurrentPassword('');
+                setNewPassword('');
+                setPasswordError(null);
+              }}
+            >
+              {t.common.cancel}
+            </button>
+          </div>
+          {passwordError ? <p className="form-error">{passwordError}</p> : null}
+        </form>
+      ) : passwordDone ? (
+        <p className="muted small">{t.auth.passwordUpdated}</p>
+      ) : null}
 
       {!active && config && !config.stripeConfigured ? (
         <p className="muted small">{t.auth.stripeMissing}</p>
