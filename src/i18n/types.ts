@@ -217,6 +217,11 @@ export interface Dict {
     passwordSave: string;
     passwordUpdated: string;
     errorSamePassword: string;
+    watchAdUnlock: string;
+    watchAdBusy: string;
+    watchAdHint: string;
+    adUnlockSuccess: string;
+    adUnavailable: string;
     deleteAccount: string;
     deleteAccountDesc: string;
     deleteConfirm: string;

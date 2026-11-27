@@ -81,14 +81,23 @@ App 內圖示與啟動圖已在 `public/icons`、`android/app/src/main/res`。
 - 若審核員需要測試帳號，請在 App access 提供一組測試會員（另行建立）。
 - 不要在 app 內顯示「到網站付款」等外部購買連結（避免違反計費政策）。
 
-## 9. 廣告（Google AdMob）
-- 插件：`@capacitor-community/admob` 8.4.2（只喺 Android 啟用；網頁與 iOS 唔會初始化，見 `src/lib/ads.ts`）。
-- App ID：`android/app/src/main/AndroidManifest.xml` 內 `com.google.android.gms.ads.APPLICATION_ID`
-  - 現時：Google 官方測試 ID `ca-app-pub-3940256099942544~3347511713`
-  - 上架前：換成 AdMob 後台（`pub-1948382835033139`）嘅正式 App ID
-- 廣告單元（`src/lib/ads.ts` 常數）
-  - Banner（底部自適應）：`ca-app-pub-3940256099942544/6300978111`（測試）
-  - Interstitial：`ca-app-pub-3940256099942544/1033173712`（測試），切換分頁時觸發，3 分鐘冷卻
+## 9. 廣告（Google AdMob，正式環境）
+- 插件：`@capacitor-community/admob` 8.4.2；Android 與 iOS 都會初始化，**一般網頁瀏覽器唔會**（`src/lib/ads.ts` 以 `Capacitor.getPlatform()` 判斷）。
+- App ID（AdMob 帳戶 `pub-1948382835033139`）
+  - Android：`android/app/src/main/AndroidManifest.xml` → `ca-app-pub-1948382835033139~4307340153`
+  - iOS：`ios/App/App/Info.plist` → `GADApplicationIdentifier = ca-app-pub-1948382835033139~2449433190`
+- 廣告單元（`AD_UNITS`，`src/lib/ads.ts`）
+  | 平台 | Banner | Interstitial | Rewarded |
+  |---|---|---|---|
+  | Android | `…/4616431534` | `…/5402899594` | `…/1203479336` |
+  | iOS | `…/8631698160` | `…/2066289818` | `…/7127044808` |
+- 顯示邏輯
+  - **Banner**：所有用戶（未登入／免費／VIP）都會顯示於底部。
+  - **Interstitial**：未登入用戶每次計出新結果（完成檔案或切換日期）時顯示，3 分鐘冷卻。
+  - **Rewarded**：已登入但非付費會員，在「今日」頁鎖定卡可點「觀看廣告解鎖 24 小時」；
+    完整觀看後呼叫 `POST /api/ads/reward`，伺服器寫入 `users.vip_expires_at`（+24 小時，最多可疊至 48 小時）。
+- iOS 額外設定：`NSUserTrackingUsageDescription`（ATT 提示）、`SKAdNetworkItems`（Google 官方 50 個識別碼）、
+  啟動時先 `requestTrackingAuthorization()` 再 `initialize()`。
 - 版面：成功載入 Banner 後才設定 CSS 變數 `--ad-banner-height: 60px`，
   底部導航、toast、`pwa-update` 與彈層底部按鈕會自動讓位，唔會被遮住。
 - app-ads.txt：`public/app-ads.txt`，部署後可於 `https://lifenum.pages.dev/app-ads.txt` 讀取
@@ -98,6 +107,6 @@ App 內圖示與啟動圖已在 `public/icons`、`android/app/src/main/res`。
   同時要在 AdMob 後台「應用程式 → app-ads.txt」填 `lifenum.pages.dev`（開發者網站網域），
   並確認該 App 已連結 Play 商店網址，AdMob 才會驗證得到。
 - 上架前檢查：
-  1. 換正式 App ID 與廣告單元，並移除 `isTesting: true`。
-  2. Play Console → Data safety 更新為「有廣告」並申報 Advertising ID。
+  1. Play Console → Data safety 更新為「有廣告」並申報 Advertising ID。
+  2. App Store Connect → App 私隱 申報「用於追蹤」與廣告資料（配合 ATT）。
   3. AdMob 帳戶完成付款資料、app 審核，並確認無無效流量警告。

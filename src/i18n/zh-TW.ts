@@ -230,6 +230,11 @@ export const zhTW: Dict = {
     passwordSave: '更新密碼',
     passwordUpdated: '密碼已更新',
     errorSamePassword: '新密碼不能與目前密碼相同。',
+    watchAdUnlock: '觀看廣告解鎖 24 小時',
+    watchAdBusy: '載入廣告中…',
+    watchAdHint: '完整觀看一段廣告，即可免費使用 24 小時會員功能；廣告未看完不會解鎖。',
+    adUnlockSuccess: '已解鎖 24 小時會員，謝謝支持！',
+    adUnavailable: '廣告暫時無法播放，請稍後再試。',
     deleteAccount: '刪除帳戶',
     deleteAccountDesc:
       '刪除後會取消訂閱，並永久移除帳戶、姓名與出生日期，無法復原。請輸入密碼確認。',

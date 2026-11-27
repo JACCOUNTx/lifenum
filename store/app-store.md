@@ -108,6 +108,9 @@ node scripts/store-screenshots.mjs
 - App 內提供「刪除帳戶」（我的 → 刪除帳戶）。
 - 不要在 app 內連結到網站付款；native 訂閱使用 IAP（見 `store/iap-revenuecat.md`）。
 - 已設定 `ITSAppUsesNonExemptEncryption = false`（只用標準 HTTPS）。
-- AdMob **只喺 Android 啟用**：iOS binary 雖然會 sync 到 `@capacitor-community/admob`，
-  但 JS 端有平台判斷（`src/lib/ads.ts`），iOS 與網頁都唔會初始化，
-  因此 iOS 未加 `GADApplicationIdentifier`、亦無 ATT 提示。日後要喺 iOS 出廣告需另行設定。
+- AdMob **Android 與 iOS 都已啟用**（網頁版不會執行）：iOS 已加 `GADApplicationIdentifier`
+  （`ca-app-pub-1948382835033139~2449433190`）、`NSUserTrackingUsageDescription`（ATT）與
+  Google 官方 50 個 `SKAdNetworkItems`；`src/lib/ads.ts` 在 iOS 會先請求 ATT 再初始化 SDK。
+- 廣告觸發：所有用戶底部 Banner；未登入用戶每次計出新結果顯示 Interstitial（3 分鐘冷卻）；
+  已登入非付費會員可看 Rewarded 廣告解鎖 24 小時（`users.vip_expires_at`）。
+  送審時請喺 App 私隱申報「用於追蹤」，並喺審核備註說明廣告只喺原生 App 顯示。

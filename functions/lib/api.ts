@@ -29,12 +29,14 @@ export interface UserJoinRow {
   password_hash?: string;
   sub_status: string | null;
   sub_end: number | null;
+  vip_expires_at?: number | null;
 }
 
 export interface Membership {
   active: boolean;
   status: string | null;
   currentPeriodEnd: number | null;
+  vipExpiresAt: number | null;
 }
 
 export interface SessionUser {
@@ -157,9 +159,12 @@ export function sessionCookie(request: Request, token: string, maxAge = SESSION_
 
 export function toSessionUser(row: UserJoinRow): SessionUser {
   const now = Math.floor(Date.now() / 1000);
-  const active =
-    row.role === 'admin' ||
-    (['active', 'trialing'].includes(row.sub_status ?? '') && (row.sub_end ?? 0) > now);
+  const vipUntil = row.vip_expires_at ?? 0;
+  const vipActive = vipUntil > now;
+  const subActive =
+    ['active', 'trialing'].includes(row.sub_status ?? '') && (row.sub_end ?? 0) > now;
+  const active = row.role === 'admin' || subActive || vipActive;
+  const periodEnd = Math.max(row.sub_end ?? 0, vipActive ? vipUntil : 0);
   return {
     id: row.id,
     email: row.email,
@@ -168,15 +173,16 @@ export function toSessionUser(row: UserJoinRow): SessionUser {
     role: row.role,
     membership: {
       active,
-      status: row.sub_status ?? null,
-      currentPeriodEnd: row.sub_end ?? null,
+      status: subActive ? (row.sub_status ?? null) : vipActive ? 'ad_unlock' : (row.sub_status ?? null),
+      currentPeriodEnd: periodEnd > 0 ? periodEnd : null,
+      vipExpiresAt: vipUntil > 0 ? vipUntil : null,
     },
   };
 }
 
 export async function getUserById(env: Env, id: string): Promise<SessionUser | null> {
   const row = await env.DB.prepare(
-    `SELECT u.id, u.email, u.name, u.birth_date, u.role,
+    `SELECT u.id, u.email, u.name, u.birth_date, u.role, u.vip_expires_at,
             s.status AS sub_status, s.current_period_end AS sub_end
        FROM users u
        LEFT JOIN subscriptions s ON s.user_id = u.id
@@ -205,7 +211,7 @@ export async function currentUser(request: Request, env: Env): Promise<SessionUs
   const tokenHash = await sha256(token);
   const now = Math.floor(Date.now() / 1000);
   const row = await env.DB.prepare(
-    `SELECT u.id, u.email, u.name, u.birth_date, u.role,
+    `SELECT u.id, u.email, u.name, u.birth_date, u.role, u.vip_expires_at,
             s.status AS sub_status, s.current_period_end AS sub_end
        FROM sessions se
        JOIN users u ON u.id = se.user_id

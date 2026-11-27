@@ -11,6 +11,7 @@ export interface Membership {
   active: boolean;
   status: string | null;
   currentPeriodEnd: number | null;
+  vipExpiresAt: number | null;
 }
 
 export interface ApiUser {
@@ -136,6 +137,10 @@ export const api = {
       if (data.token) localStorage.setItem(TOKEN_KEY, data.token);
       return data.user;
     }),
+  grantAdVip: () =>
+    request<{ user: ApiUser; vipExpiresAt: number }>('/api/ads/reward', {
+      method: 'POST',
+    }).then((data) => data.user),
   deleteAccount: (password: string) =>
     request<{ ok: boolean }>('/api/me', {
       method: 'DELETE',

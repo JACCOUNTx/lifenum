@@ -229,14 +229,11 @@ export default function App() {
     void showBanner();
   }, []);
 
-  const tabChanged = useRef(false);
+  // 未登入用戶每次計出新結果（建立檔案或切換日期）時顯示插頁廣告，冷卻由 ads.ts 控制。
   useEffect(() => {
-    if (!tabChanged.current) {
-      tabChanged.current = true;
-      return;
-    }
+    if (authLoading || user || !profile) return;
     void maybeShowInterstitial();
-  }, [tab]);
+  }, [authLoading, user, profile, selectedDate]);
 
   useEffect(() => {
     if (Capacitor.getPlatform() !== 'android') return;

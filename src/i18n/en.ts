@@ -231,6 +231,11 @@ export const en: Dict = {
     passwordSave: 'Update password',
     passwordUpdated: 'Password updated',
     errorSamePassword: 'The new password must differ from the current one.',
+    watchAdUnlock: 'Watch an ad for 24 hours',
+    watchAdBusy: 'Loading ad…',
+    watchAdHint: 'Watch a full ad to unlock member features for 24 hours. Closing it early will not unlock anything.',
+    adUnlockSuccess: '24-hour membership unlocked — thank you!',
+    adUnavailable: 'Ads are unavailable right now, please try again later.',
     deleteAccount: 'Delete account',
     deleteAccountDesc:
       'This cancels your subscription and permanently removes your account, name and birth date. It cannot be undone. Enter your password to confirm.',

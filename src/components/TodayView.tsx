@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useI18n } from '../i18n';
-import { formatMoney } from '../lib/api';
+import { api, formatMoney } from '../lib/api';
+import { showRewardedAd } from '../lib/ads';
 import { useAuth } from '../lib/auth';
 import { formatLongDate } from '../lib/date';
 import type { GanzhiInfo } from '../lib/ganzhi';
@@ -45,11 +46,31 @@ export function TodayView({
   onCopy,
 }: TodayViewProps) {
   const { t, locale, tag, format } = useI18n();
-  const { user, config, openAuth, subscribe } = useAuth();
+  const { user, config, openAuth, subscribe, refresh } = useAuth();
+  const [adBusy, setAdBusy] = useState(false);
+  const [adNotice, setAdNotice] = useState<string | null>(null);
   const price = config ? formatMoney(config.priceCents, config.currency, tag) : '—';
   const handleUnlock = () => {
     if (user) void subscribe();
     else openAuth();
+  };
+  const handleRewarded = async () => {
+    if (!user || adBusy) return;
+    setAdBusy(true);
+    setAdNotice(null);
+    try {
+      if (!(await showRewardedAd())) {
+        setAdNotice(t.auth.adUnavailable);
+        return;
+      }
+      await api.grantAdVip();
+      await refresh();
+      setAdNotice(t.auth.adUnlockSuccess);
+    } catch {
+      setAdNotice(t.auth.adUnavailable);
+    } finally {
+      setAdBusy(false);
+    }
   };
   const dayElement = recommendation.dayElement;
   const personalElement = recommendation.personalElement;
@@ -196,6 +217,20 @@ export function TodayView({
               ? format(t.auth.subscribe, { price: `${price}/${t.auth.perMonth}` })
               : t.auth.loginToSubscribe}
           </button>
+          {user ? (
+            <>
+              <button
+                type="button"
+                className="ghost-btn"
+                onClick={() => void handleRewarded()}
+                disabled={adBusy}
+              >
+                {adBusy ? t.auth.watchAdBusy : t.auth.watchAdUnlock}
+              </button>
+              <p className="muted small">{t.auth.watchAdHint}</p>
+              {adNotice ? <p className="muted small">{adNotice}</p> : null}
+            </>
+          ) : null}
           {user && config && !config.stripeConfigured ? (
             <p className="muted small">{t.auth.stripeMissing}</p>
           ) : null}
