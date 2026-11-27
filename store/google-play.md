@@ -110,3 +110,11 @@ App 內圖示與啟動圖已在 `public/icons`、`android/app/src/main/res`。
   1. Play Console → Data safety 更新為「有廣告」並申報 Advertising ID。
   2. App Store Connect → App 私隱 申報「用於追蹤」與廣告資料（配合 ATT）。
   3. AdMob 帳戶完成付款資料、app 審核，並確認無無效流量警告。
+
+## 10. 版本與上傳
+- 現時版本：`versionName 1.1.1`／`versionCode 4`（`android/app/build.gradle`）。
+- 每次上版：改 `versionCode` +1、`versionName`，並保持與 iOS `MARKETING_VERSION` 一致。
+- 手動觸發 **Android Release AAB** workflow，產物 `lifenum-release-aab`（Actions → 該次 run → Artifacts）。
+- 自動上傳 Play internal track 需要 GitHub Secret `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`；
+  未設定時 workflow 只會產生 AAB，需到 Play Console → 測試 → 內部測試 → 上傳 AAB 手動發佈。
+  上傳後再由內部測試 Promote 到正式版（API 不會代做）。

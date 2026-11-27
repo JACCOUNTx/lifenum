@@ -72,7 +72,6 @@ npm run release:submit -- 1.2.0 --dry-run
 - 截圖可隨時在 App Store Connect 更新，不需要新 build。
 
 ## 5. 常見改動建議
-
 | 想改 | 建議做法 |
 |---|---|
 | 每日顏色／五行規則 | 改 `src/lib/*`，出新版本（App 內計算） |

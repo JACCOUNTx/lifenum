@@ -49,6 +49,10 @@ npx wrangler d1 execute lifenum-restore --remote --file D:\LifeNum\backups\<stam
 ## C. 自動上架 Android（Google Play internal track）
 `.github/workflows/android.yml` 會建置 AAB，然後在 `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` 存在時自動上傳至 **internal** track。
 
+> `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` 現時**未設定**，所以每次只會產生 artifact
+> （Actions → run → Artifacts → `lifenum-release-aab`），需手動上傳 Play Console。
+> 另外 secret 要放在 job 層 `env`，因為 step 層 `env` 喺同一 step 嘅 `if` 判斷中唔會生效。
+
 一次性設定：
 1. Play Console → 設定 → API 存取權 → 建立服務帳戶（或連結現有 GCP 服務帳戶）。
 2. 在 Google Cloud Console 為該服務帳戶建立 JSON key。
